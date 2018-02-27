@@ -34,3 +34,12 @@ C:\Users\mirko\Desktop\Tirocinio Mirko\GitLab\multi-leap-motion-vr\WebsocketServ
 C:\Users\mirko\Desktop\Tirocinio Mirko\GitLab\multi-leap-motion-vr\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.csproj.CoreCompileInputs.cache
 C:\Users\mirko\Desktop\Tirocinio Mirko\GitLab\multi-leap-motion-vr\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.exe
 C:\Users\mirko\Desktop\Tirocinio Mirko\GitLab\multi-leap-motion-vr\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.pdb
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\bin\Debug\WebsocketServer.exe.config
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\bin\Debug\WebsocketServer.exe
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\bin\Debug\WebsocketServer.pdb
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\bin\Debug\websocket-sharp.dll
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\bin\Debug\websocket-sharp.xml
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.csprojResolveAssemblyReference.cache
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.csproj.CoreCompileInputs.cache
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.exe
+C:\Users\mirko\Desktop\Caterina\LeapAR\WebsocketServer\WebsocketServer\obj\Debug\WebsocketServer.pdb

@@ -90,8 +90,8 @@ namespace WebsocketServer
 
                 if (wssv.IsListening)
                 {
-                    //   wssv.WebSocketServices.Broadcast(e.Data);
-                    wssv.WebSocketServices.Broadcast(twoHands);
+                    wssv.WebSocketServices.Broadcast(e.Data);
+                    //wssv.WebSocketServices.Broadcast(twoHands);
                     //Console.WriteLine("Sent");
                 }
             }

@@ -42,10 +42,10 @@ MonoBehaviour:
     y: 30
     width: 1680
     height: 917
-  m_MinSize: {x: 679, y: 492}
-  m_MaxSize: {x: 14002, y: 14042}
+  m_MinSize: {x: 683, y: 492}
+  m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 9
+  controlID: 103
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -64,8 +64,8 @@ MonoBehaviour:
     y: 0
     width: 537
     height: 917
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -206,10 +206,10 @@ MonoBehaviour:
     y: 0
     width: 1143
     height: 917
-  m_MinSize: {x: 404, y: 492}
+  m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 10
+  controlID: 104
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -230,10 +230,10 @@ MonoBehaviour:
     y: 0
     width: 1143
     height: 523
-  m_MinSize: {x: 404, y: 221}
-  m_MaxSize: {x: 8004, y: 4021}
+  m_MinSize: {x: 406, y: 221}
+  m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 11
+  controlID: 105
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -327,19 +327,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Resources
+    - Assets
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Resources
+  - Assets/Fbk/Script
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\mirko\Desktop\Caterina\LeapAR\LeapAR
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 764}
-    m_SelectedIDs: e6300000
-    m_LastClickedID: 12518
-    m_ExpandedIDs: 00000000e22b0000fc2b0000402c0000e22c0000be2d0000f42d0000742e0000fa2e0000642f0000d62f000018300000f630000014310000ac330000ae330000b0330000b2330000b433000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 94330000
+    m_LastClickedID: 13204
+    m_ExpandedIDs: 000000009430000060310000b0320000f43200003a330000563300009033000094330000c63300002e340000b03400004a35000084350000be380000c0380000c2380000c4380000c638000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -367,7 +367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000e22b0000fc2b0000402c0000e22c0000be2d0000f42d0000742e0000fa2e0000642f0000d62f000018300000f630000014310000ac330000ae330000b0330000b2330000b4330000
+    m_ExpandedIDs: 000000009430000060310000b0320000f43200003a330000563300009033000094330000c63300002e340000b03400004a35000084350000be380000c0380000c2380000c4380000c6380000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -487,7 +487,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: e6bcfcffbebdfcff94c0fcfff67ffdffe280fdffb883fdff2c93fdff1894fdff4e98fdff509dfdff48d4fdff1ed5fdfff8d7fdffee31feffe64cfeffc04dfeff9650feff1056feffe856feffc059feff5a48ffff0a49ffffe04bffff9a79ffff747affff4a7dffffeaf3ffffc4f4ffff9af7ffff9efbffff00000000786f0000
+    m_ExpandedIDs: faecffffe4edffff74f0ffff9af7ffff76fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -573,9 +573,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0.19333786, y: 0.4088072, z: -0.0890637, w: 0.8874485}
   m_Size:
-    m_Target: 4.724315
+    m_Target: 3.224315
     speed: 2
-    m_Value: 4.724315
+    m_Value: 3.224315
   m_Ortho:
     m_Target: 0
     speed: 2
