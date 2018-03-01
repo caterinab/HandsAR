@@ -76,7 +76,7 @@ public class WebsocketConnection : MonoBehaviour {
 			ws.CloseAsync();
 		});
 
-		stateMachine.Run();
+        ConnectClient();
 	}
 
 	private void OnOpenHandler(object sender, System.EventArgs e) {
@@ -146,7 +146,7 @@ public class WebsocketConnection : MonoBehaviour {
             buffer.RemoveAt(0);
         }
     }
-
+    
     void OnApplicationFocus(bool focus)
     {
     #if !UNITY_EDITOR
@@ -174,17 +174,18 @@ public class WebsocketConnection : MonoBehaviour {
             }
     #endif
     }
-
+    
     void ConnectClient() {
-        stateMachine.Run(); // TODO: fix
+        stateMachine.Run();
     }
 
     void DisconnectClient()
     {
         ws.SendAsync("Disconnecting", OnSendComplete);
+        isConnected = false;
         ws.CloseAsync();
     }
-
+    
     void OnApplicationQuit()
     {
         DisconnectClient();
