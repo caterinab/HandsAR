@@ -21,7 +21,8 @@ namespace Leap.Unity
     /**LeapServiceProvider creates a Controller and supplies Leap Hands and images */
     public class LeapServiceProviderNew : LeapProvider
     {
-        FrameProviderNew frameProvider;
+        //FrameProviderNew frameProvider;
+        WebsocketConnection frameProvider;
 
         /** Conversion factor for nanoseconds to seconds. */
         protected const float NS_TO_S = 1e-6f;
@@ -195,7 +196,7 @@ namespace Leap.Unity
 
         protected virtual void Start()
         {
-            frameProvider = GetComponent<FrameProviderNew>();
+            frameProvider = GetComponent<WebsocketConnection>();
             
 
             checkShouldEnableHeadMounted();

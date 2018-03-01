@@ -22,9 +22,11 @@ using WebSocketSharp;
 
 public class WebsocketConnection : MonoBehaviour {
 	public StateMachine stateMachine;
+    public int maxBufferSize = 100;
+    public bool isConnected;
 
     //Oggetti necessari per la cattura di frame
-	private WebSocket ws;
+    private WebSocket ws;
     [HideInInspector]
     public List<Frame> buffer;
     private FrameConverter converter;
@@ -32,7 +34,7 @@ public class WebsocketConnection : MonoBehaviour {
     //ws://192.168.1.101:6437/v6.json
     [Tooltip("Websocket server IP to connect to.")]
 
-    public string websocketIP= "192.168.84.126";
+    public string websocketIP= "192.168.41.67";
 
     //Oggetti Per registrare su file i timestamp dei pacchetti
     StreamWriter writer;
@@ -59,8 +61,7 @@ public class WebsocketConnection : MonoBehaviour {
 		ws.OnClose += OnCloseHandler;
         
 		stateMachine.AddHandler(State.Running, () => {
-				ws.ConnectAsync();
-
+			ws.ConnectAsync();
 		});
 
 		stateMachine.AddHandler(State.Connected, () => {
@@ -68,11 +69,11 @@ public class WebsocketConnection : MonoBehaviour {
 		});
 
 		stateMachine.AddHandler(State.Ping, () => {
-				ws.SendAsync("Messaggio!", OnSendComplete);
+			ws.SendAsync("Connected", OnSendComplete);
 		});
 
 		stateMachine.AddHandler(State.Pong, () => {
-				ws.CloseAsync();
+			ws.CloseAsync();
 		});
 
 		stateMachine.Run();
@@ -80,7 +81,8 @@ public class WebsocketConnection : MonoBehaviour {
 
 	private void OnOpenHandler(object sender, System.EventArgs e) {
 		Debug.Log("WebSocket connected!");
-		stateMachine.Transition(State.Connected);
+        isConnected = true;
+        stateMachine.Transition(State.Connected);
 	}
 
 	private void OnMessageHandler(object sender, MessageEventArgs e) {
@@ -124,24 +126,68 @@ public class WebsocketConnection : MonoBehaviour {
 
         if (recordToLog)
             writer.WriteLine((DateTime.UtcNow-epoch).TotalMilliseconds + "-"+frame.Timestamp);
-                                  
-        buffer.Add(frame);
 
+        buffer.Add(frame);
+    }
+
+    public Frame LatestFrame
+    {
+        get
+        {
+            return buffer.Count > 2 ? buffer[buffer.Count - 1] : new Frame();
+        }
+        set { LatestFrame = value; }
     }
 
     void Update()
     {
-        while (buffer.Count > 10)
+        while (buffer.Count > maxBufferSize)
         {
             buffer.RemoveAt(0);
         }
     }
 
+    void OnApplicationFocus(bool focus)
+    {
+    #if !UNITY_EDITOR
+            if (focus && !this.isConnected)
+            {
+                this.ConnectClient();
+            }
+            else if (!focus && this.isConnected)
+            {
+                this.DisconnectClient();
+            }
+    #endif
+    }
+
+    void OnApplicationPause(bool pause)
+    {
+    #if !UNITY_EDITOR
+            if (pause && this.isConnected)
+            {
+                this.DisconnectClient();
+            }
+            else if (!pause && !this.isConnected)
+            {
+                this.ConnectClient();
+            }
+    #endif
+    }
+
+    void ConnectClient() {
+        stateMachine.Run(); // TODO: fix
+    }
+
+    void DisconnectClient()
+    {
+        ws.SendAsync("Disconnecting", OnSendComplete);
+        ws.CloseAsync();
+    }
+
     void OnApplicationQuit()
     {
-        ws.CloseAsync();
+        DisconnectClient();
         Debug.Log("Application ending after " + Time.time + " seconds");
-    }
-    
-
+    }    
 }

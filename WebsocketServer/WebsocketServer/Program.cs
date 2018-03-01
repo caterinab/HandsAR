@@ -21,7 +21,7 @@ namespace WebsocketServer
 
               Send(msg);
           */
-            Console.WriteLine("Ricevuto messaggio da client:"+e.Data);
+            Console.WriteLine("Client says: " + e.Data);
         }
 
         protected override void OnClose(CloseEventArgs e)
@@ -47,7 +47,7 @@ namespace WebsocketServer
 
             ws = new WebSocket("ws://localhost:6437/v6.json");
             wssv = new WebSocketServer(System.Net.IPAddress.Any, 6438);
-         //   wssv = new WebSocketServer("ws://localhost:6438");
+            //   wssv = new WebSocketServer("ws://localhost:6438");
 
             wssv.AddWebSocketService<Laputa>("/");
             
@@ -58,17 +58,10 @@ namespace WebsocketServer
             wssv.Start();
 
             ws.Connect();
-
-
+            
             ws.Send("{\"optimizeHMD\": true}");
 
-
             //Server
-             
-            
-
-           
-
             Console.WriteLine("Avviato server.");
             Console.ReadKey(true);
         }
