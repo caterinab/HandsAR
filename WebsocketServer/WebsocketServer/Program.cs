@@ -77,15 +77,16 @@ namespace WebsocketServer
         private static void OnMessageHandler(object sender, MessageEventArgs e)
         {
             ++contatore;
-            contatore %= 5;
+            contatore %= 7;
             if (contatore == 0)
             {
 
                 if (wssv.IsListening)
                 {
+
                     wssv.WebSocketServices.Broadcast(e.Data);
                     //wssv.WebSocketServices.Broadcast(twoHands);
-                    //Console.WriteLine("Sent");
+                    //Console.WriteLine(e.Data);
                 }
             }
         }

@@ -252,7 +252,7 @@ namespace Leap.Unity
               */
 
          //   leap_controller_.Frame(_untrasformedTestFixedFrame);
-            _untransformedUpdateFrame = frameProvider.LatestFrame;
+            _untransformedUpdateFrame = frameProvider.GetLatestFrame();
            
             /*   if (_untrasformedTestFixedFrame.Hands.Count > 0)
                Debug.Log("Controller frame PALMWIDTH: " + _untrasformedTestFixedFrame.Hands[0].PalmWidth);
@@ -297,7 +297,7 @@ namespace Leap.Unity
              }*/
 
             
-            _untransformedFixedFrame = frameProvider.LatestFrame;
+            _untransformedFixedFrame = frameProvider.GetLatestFrame();
            // _transformedFixedFrame = frameProvider.latestFrame;
             //Debug.Log(_untransformedFixedFrame.Id);
 

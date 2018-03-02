@@ -22,19 +22,20 @@ using WebSocketSharp;
 
 public class WebsocketConnection : MonoBehaviour {
 	public StateMachine stateMachine;
-    public int maxBufferSize = 100;
-    public bool isConnected;
+    public int maxBufferSize = 10;
+    private bool isConnected;
 
     //Oggetti necessari per la cattura di frame
     private WebSocket ws;
     [HideInInspector]
-    public List<Frame> buffer;
+    public List<Frame> buffer;  // stack
     private FrameConverter converter;
 
     //ws://192.168.1.101:6437/v6.json
     [Tooltip("Websocket server IP to connect to.")]
 
-    public string websocketIP= "192.168.41.67";
+    //public string websocketIP= "192.168.41.67";
+    public string websocketIP = "192.168.84.126";
 
     //Oggetti Per registrare su file i timestamp dei pacchetti
     StreamWriter writer;
@@ -51,7 +52,7 @@ public class WebsocketConnection : MonoBehaviour {
         if(recordToLog)
             writer = new StreamWriter(path, true);
 
-        buffer = new System.Collections.Generic.List<Frame>();
+        buffer = new List<Frame>();
         //ws = new WebSocket("ws://"+websocketIP+ ":6437/v6.json");
         ws = new WebSocket("ws://" + websocketIP + ":6438");
         converter = new FrameConverter();
@@ -79,31 +80,36 @@ public class WebsocketConnection : MonoBehaviour {
         ConnectClient();
 	}
 
-	private void OnOpenHandler(object sender, System.EventArgs e) {
+	private void OnOpenHandler(object sender, EventArgs e) {
 		Debug.Log("WebSocket connected!");
         isConnected = true;
         stateMachine.Transition(State.Connected);
 	}
 
 	private void OnMessageHandler(object sender, MessageEventArgs e) {
-       // writer.WriteLine((DateTime.UtcNow - epoch).TotalMilliseconds + " - BEFORE");
-        string json= e.Data;
-        
-        /*Switch per il possibile json che ci arriva.
-        Tre tipi:
-        c: framedata
-        e: event
-        s: serviceVersion
-        */
-        switch(json[2])
-        {
-            case 'c': HandleJsonFrameData(json);break;
-            case 'e': break;
-            case 's': break;
-            default:
-                Debug.Log("Invalid json");
-                break;
-        }
+        //counter %= 4;
+        //if (counter == 0)
+        //{
+            // writer.WriteLine((DateTime.UtcNow - epoch).TotalMilliseconds + " - BEFORE");
+            string json = e.Data;
+            //byte[] data = e.RawData;
+
+            /*Switch per il possibile json che ci arriva.
+            Tre tipi:
+            c: framedata
+            e: event
+            s: serviceVersion
+            */
+            switch (json[2])
+            {
+                case 'c': HandleJsonFrameData(json); break;
+                case 'e': break;
+                case 's': break;
+                default:
+                    Debug.Log("Invalid json");
+                    break;
+            }
+        //}
 	}
 
 	private void OnCloseHandler(object sender, CloseEventArgs e) {
@@ -120,9 +126,8 @@ public class WebsocketConnection : MonoBehaviour {
 	}
 
     private void HandleJsonFrameData(string jsonFrame)
-    {
- 
-       Frame frame = converter.ConvertFromString(jsonFrame);
+    {        
+        Frame frame = converter.ConvertFromString(jsonFrame);
 
         if (recordToLog)
             writer.WriteLine((DateTime.UtcNow-epoch).TotalMilliseconds + "-"+frame.Timestamp);
@@ -130,23 +135,18 @@ public class WebsocketConnection : MonoBehaviour {
         buffer.Add(frame);
     }
 
-    public Frame LatestFrame
-    {
-        get
-        {
-            return buffer.Count > 2 ? buffer[buffer.Count - 1] : new Frame();
-        }
-        set { LatestFrame = value; }
-    }
-
-    void Update()
-    {
-        while (buffer.Count > maxBufferSize)
-        {
-            buffer.RemoveAt(0);
-        }
+    public Frame GetLatestFrame() {
+        return buffer.Count > 2 ? buffer[buffer.Count - 1] : new Frame();
     }
     
+    void Update()
+    {
+        int end = buffer.Count - maxBufferSize;
+
+        if (end > 0)
+            buffer.RemoveRange(0, end);
+    }
+        
     void OnApplicationFocus(bool focus)
     {
     #if !UNITY_EDITOR
@@ -175,11 +175,11 @@ public class WebsocketConnection : MonoBehaviour {
     #endif
     }
     
-    void ConnectClient() {
+    public void ConnectClient() {
         stateMachine.Run();
     }
 
-    void DisconnectClient()
+    public void DisconnectClient()
     {
         ws.SendAsync("Disconnecting", OnSendComplete);
         isConnected = false;
