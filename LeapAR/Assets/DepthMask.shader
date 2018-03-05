@@ -1,14 +1,10 @@
 Shader "DepthMask"
 {
-    SubShader
-    {
-        Tags {"Queue" = "Geometry-1" }
-        Lighting Off
-        Pass
-        {
-            ZWrite On
-            ZTest LEqual
-            ColorMask 0    
-        }
+  SubShader {
+    // queue = 2001
+    Tags { "Queue"="Geometry-1" }
+    Pass {
+      Blend Zero One
     }
+  } 
 }

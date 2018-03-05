@@ -17,9 +17,15 @@ public class ButtonManager : MonoBehaviour {
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
     }
 
-    public void StartScene() {
+    public void StartMainScene() {
         GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().DisconnectClient();
         SceneManager.LoadSceneAsync("main");
+    }
+
+    public void StartMenuScene()
+    {
+        GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().DisconnectClient();
+        SceneManager.LoadSceneAsync("menu");
     }
 
     public void ResetOffset()
