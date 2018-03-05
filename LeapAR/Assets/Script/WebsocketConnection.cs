@@ -141,10 +141,16 @@ public class WebsocketConnection : MonoBehaviour {
     
     void Update()
     {
-        int end = buffer.Count - maxBufferSize;
+
+        /*int end = buffer.Count - maxBufferSize;
 
         if (end > 0)
             buffer.RemoveRange(0, end);
+        */
+
+        while (buffer.Count >= maxBufferSize) {
+            buffer.RemoveAt(0);
+        }
     }
         
     void OnApplicationFocus(bool focus)
