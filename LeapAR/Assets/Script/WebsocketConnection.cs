@@ -127,15 +127,17 @@ public class WebsocketConnection : MonoBehaviour {
 
     private void HandleJsonFrameData(string jsonFrame)
     {        
+        // conversion on message avoids slowing down leapserviceprovidernew on update
         Frame frame = converter.ConvertFromString(jsonFrame);
 
         if (recordToLog)
-            writer.WriteLine((DateTime.UtcNow-epoch).TotalMilliseconds + "-"+frame.Timestamp);
+            writer.WriteLine((DateTime.UtcNow-epoch).TotalMilliseconds + "-" + frame.Timestamp);
 
         buffer.Add(frame);
     }
 
     public Frame GetLatestFrame() {
+        // return the newest converted frame
         return buffer.Count > 2 ? buffer[buffer.Count - 1] : new Frame();
     }
     

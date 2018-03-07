@@ -30,10 +30,14 @@ public class ButtonManager : MonoBehaviour {
 
     public void ResetOffset()
     {
-        PlayerPrefs.SetFloat("sensorX", 0);
-        PlayerPrefs.SetFloat("sensorY", 0);
-        PlayerPrefs.SetFloat("sensorZ", 0);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(0, 0, 0);
+    }
+
+    public void SaveOffset() {
+        Vector3 p = GameObject.Find("LeapHandController").transform.localPosition;
+        PlayerPrefs.SetFloat("sensorX", p.x);
+        PlayerPrefs.SetFloat("sensorY", p.y);
+        PlayerPrefs.SetFloat("sensorZ", p.z);
     }
 
     public void IncrementX() {
@@ -42,8 +46,6 @@ public class ButtonManager : MonoBehaviour {
         p.x += delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorX", p.x);
     }
 
     public void IncrementY()
@@ -53,8 +55,6 @@ public class ButtonManager : MonoBehaviour {
         p.y += delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorY", p.y);
     }
 
     public void IncrementZ()
@@ -64,8 +64,6 @@ public class ButtonManager : MonoBehaviour {
         p.z += delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorZ", p.z);
     }
 
     public void DecrementX()
@@ -75,8 +73,6 @@ public class ButtonManager : MonoBehaviour {
         p.x -= delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorX", p.x);
     }
 
     public void DecrementY()
@@ -86,8 +82,6 @@ public class ButtonManager : MonoBehaviour {
         p.y -= delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorY", p.y);
     }
 
     public void DecrementZ()
@@ -97,7 +91,5 @@ public class ButtonManager : MonoBehaviour {
         p.z -= delta;
 
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
-
-        PlayerPrefs.SetFloat("sensorZ", p.z);
     }
 }

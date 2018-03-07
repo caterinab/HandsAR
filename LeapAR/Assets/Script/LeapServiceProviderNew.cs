@@ -298,7 +298,7 @@ namespace Leap.Unity
 
             
             _untransformedFixedFrame = frameProvider.GetLatestFrame();
-           // _transformedFixedFrame = frameProvider.latestFrame;
+            //_transformedFixedFrame = frameProvider.latestFrame;
             //Debug.Log(_untransformedFixedFrame.Id);
 
 
