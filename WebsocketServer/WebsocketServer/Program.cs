@@ -9,18 +9,10 @@ using WebSocketSharp.Server;
 
 namespace WebsocketServer
 {
-
-
     public class Laputa : WebSocketBehavior
     {
         protected override void OnMessage(MessageEventArgs e)
         {
-            /*  var msg = e.Data == "BALUS"
-                        ? "I've been balused already..."
-                        : "I'm not available now.";
-
-              Send(msg);
-          */
             Console.WriteLine("Client says: " + e.Data);
         }
 
@@ -42,12 +34,12 @@ namespace WebsocketServer
         static WebSocket ws;
         static WebSocketServer wssv;
         static int contatore = 0;
+
         static void Main(string[] args)
         {
-
             ws = new WebSocket("ws://localhost:6437/v6.json");
             wssv = new WebSocketServer(System.Net.IPAddress.Any, 6438);
-            //   wssv = new WebSocketServer("ws://localhost:6438");
+            //wssv = new WebSocketServer("ws://localhost:6438");
 
             wssv.AddWebSocketService<Laputa>("/");
             
@@ -94,9 +86,7 @@ namespace WebsocketServer
         private static void OnCloseHandler(object sender,CloseEventArgs e)
         {
                 Console.WriteLine("Connessione al servizio Leap Motion fallita. Riproviamo");
-              //  if (e.Code != (ushort)CloseStatusCode.Normal)
-                //{
-                    Thread.Sleep(1000); // If necessary 
+                Thread.Sleep(1000); // If necessary 
                 ws.Close();
                 ws = new WebSocket("ws://localhost:6437/v6.json");
                 ws.OnOpen += OnOpenHandler;

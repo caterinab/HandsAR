@@ -141,9 +141,7 @@ namespace Leap.Unity{
     public Quaternion GetBoneRotation(int bone_type) {
       if (finger_ != null) {
         Quaternion local_rotation = finger_.Bone ((Bone.BoneType)(bone_type)).Rotation.ToQuaternion();
-
-              //  Debug.Log(local_rotation.ToString());
-                return local_rotation;
+        return local_rotation;
       }
       if (bones[bone_type]) {
         return bones[bone_type].rotation;
