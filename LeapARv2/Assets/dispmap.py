@@ -78,9 +78,9 @@ class LeapBridge():
 
 	def view(self):
 		self._update()
-		#for i,s in enumerate(self.sides):
-		#	cv2.imshow(s+" raw",self.img_raw[s])
-		#	cv2.imshow(s+" rectified",self.img_rectified[s])
+		for i,s in enumerate(self.sides):
+			cv2.imshow(s+" raw",self.img_raw[s])
+			cv2.imshow(s+" rectified",self.img_rectified[s])
 			
 		cv2.imshow('disparity',self.img_disparity)
 		cv2.waitKey()
@@ -104,8 +104,8 @@ class LeapBridge():
 			self.img_raw[s] = self.convertCV(self.img_leap[s])
 
 	def _genDisparity(self):
-		self.img_disparity = self.getDisparity(self.img_rectified["left"],self.img_rectified["right"])	
-		self.img_disparity = cv2.medianBlur(self.img_disparity,3)
+		self.img_disparity = self.getDisparity(self.img_rectified["left"],self.img_rectified["right"])
+		#self.img_disparity = cv2.medianBlur(self.img_disparity,3)
 
 	def _genRectified(self):
 		for i,s in enumerate(self.sides):
@@ -147,20 +147,16 @@ class LeapBridge():
 		
 	def getDisparity(self,cv_imgL,cv_imgR):
 		#disparity = cv2.CreateMat(cv_imgL.shape[0],cv_imgL.shape[1],cv.CV_32F)
-		disparity = np.array((cv_imgL.shape[0],cv_imgL.shape[1]),np.float32)
-		#disparity_visual = cv2.CreateMat(cv_imgL.shape[0],cv_imgL.shape[1],cv.CV_8U)
-		disparity_visual = np.array((cv_imgL.shape[0],cv_imgL.shape[1]),np.uint8)
+		disparity = np.zeros((cv_imgL.shape[0],cv_imgL.shape[1]),np.float32)
 
 		#generate former cv images from cv2:
 		imgL = cv2.cvtColor(cv_imgL,cv2.COLOR_BGR2GRAY)
 		imgR = cv2.cvtColor(cv_imgR,cv2.COLOR_BGR2GRAY)
 		#cv2.FindStereoCorrespondenceBM(imgL,imgR,disparity,self.sbm)
-		self.sbm.compute(imgL,imgR, disparity)
-		for i in range(imgL.shape[0]):
-			for j in range(imgL.shape[1]):
-				print(disparity[i][j])
-		cv2.normalize(disparity,disparity_visual,0,255,norm_type=cv2.NORM_MINMAX)
-		return cv2.cvtColor(np.array(disparity_visual),cv2.COLOR_GRAY2BGR)
+		disparity = self.sbm.compute(imgL,imgR)
+		cv2.normalize(disparity,disparity,0,255,norm_type=cv2.NORM_MINMAX)
+		disparity = disparity.astype(np.uint8)
+		return cv2.cvtColor(np.array(disparity),cv2.COLOR_GRAY2BGR)
 		
 	#def getDisparityBasic(self,cv_imgL,cv_imgR):
 	#	return self.bm.compute(cv_imgL,cv_imgR)
