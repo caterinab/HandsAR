@@ -11,9 +11,7 @@ from matplotlib import pyplot as plt
 import warnings
 
 class LeapBridge():
-	mx,my,img_leap,img_raw,img_rectified = {},{},{},{},{}	
-	img_disparity = None
-	img_disparity2 = None
+	mx,my,img_leap,img_raw,img_rectified = {},{},{},{},{}
 	sides = ["left","right"]
 	sbm = None
 	
@@ -23,21 +21,6 @@ class LeapBridge():
 		self.controller.set_policy_flags(Leap.Controller.POLICY_IMAGES)
 		self.width = oWidth
 		self.height = oHeight
-		
-		#generating the sbm object for stereo analysis:
-		self.sbm = cv2.StereoBM_create(numDisparities=112, blockSize=9)
-		self.sbm.setPreFilterType(1)
-		self.sbm.setPreFilterSize(5)
-		self.sbm.setPreFilterCap(39)
-		#self.sbm.minDisparity = 0 by default
-		self.sbm.setTextureThreshold(607)
-		self.sbm.setUniquenessRatio(8)
-		
-		#self.sbm.speckleRange = 8
-		#self.sbm.speckleWindowSize = 0
-		
-		#self.bm = cv2.StereoBM_create(cv2.FISH_EYE_PRESET,80,11)
-		self.bm = cv2.fisheye
 		
 		#generating blank image here for re-use later:
 		self.img_blank = np.zeros([self.height,self.width,3]).astype("uint8")
@@ -76,15 +59,12 @@ class LeapBridge():
 			cv2.imshow(s+" raw",self.img_raw[s])
 			#cv2.imshow(s+" rectified",self.img_rectified[s])
 			
-		cv2.imshow('disparity',self.img_disparity)
-		#cv2.imshow('disparity2',self.img_disparity2)
 		cv2.waitKey()
 		cv2.destroyAllWindows()
 	
 	def _update(self):
 		self._poll()
 		self._genRectified()
-		self._genDisparity()
 	
 	#retrieves data from Leap	
 	def _poll(self):
@@ -97,11 +77,6 @@ class LeapBridge():
 		for i,s in enumerate(self.sides):
 			self.img_leap[s] = imgs[i]
 			self.img_raw[s] = self.convertCV(self.img_leap[s])
-
-	def _genDisparity(self):
-		self.img_disparity = self.getDisparity(self.img_raw["left"],self.img_raw["right"])
-		self.img_disparity2 = self.getDisparity(self.img_rectified["left"],self.img_rectified["right"])
-		#self.img_disparity = cv2.medianBlur(self.img_disparity,3)
 
 	def _genRectified(self):
 		for i,s in enumerate(self.sides):
@@ -133,31 +108,6 @@ class LeapBridge():
 		if len(self.mx)==0 or len(self.my)==0:
 			self._genMap()
 		np.save(fileName,{"mx":self.mx,"my":self.my})
-		
-	#def getPointCloud(self,disp_img):
-	#	if len(disp_img.shape)==3:
-	#		disp_img = cv2.cvtColor(disp_img,cv2.COLOR_BGR2GRAY)	#single channel only for point clouds!
-	#	pc = np.reshape(cv2.reprojectImageTo3D(disp_img,self.d2d),(self.width*self.height,3))
-	#	p_thresh = 20
-	#	pc = pc[np.logical_and(np.logical_and(abs(pc[:,0])<p_thresh,abs(pc[:,1])<p_thresh),abs(pc[:,2])<p_thresh),:]
-	#	return pc
-		
-	def getDisparity(self,cv_imgL,cv_imgR):
-		disparity = np.zeros((cv_imgL.shape[0],cv_imgL.shape[1]),np.float32)
-
-		#generate former cv images from cv2:
-		imgL = cv2.cvtColor(cv_imgL,cv2.COLOR_BGR2GRAY)
-		imgR = cv2.cvtColor(cv_imgR,cv2.COLOR_BGR2GRAY)
-		disparity = self.sbm.compute(imgL,imgR)
-		#plt.imshow(disparity,'gray')
-		#plt.show()
-		cv2.normalize(disparity,disparity,0,255,norm_type=cv2.NORM_MINMAX)
-		disparity = disparity.astype(np.uint8)
-		disparity = cv2.cvtColor(np.array(disparity),cv2.COLOR_GRAY2BGR)
-		return disparity
-		
-	#def getDisparityBasic(self,cv_imgL,cv_imgR):
-	#	return self.bm.compute(cv_imgL,cv_imgR)
 
 	def undistort(self,cv_img,mx,my):
 		return cv2.remap(cv_img,mx,my,cv2.INTER_LINEAR)
@@ -173,8 +123,10 @@ class LeapBridge():
 		pil_img = self.convertPIL(leap_img)
 		cv_img = np.array(pil_img)[:,:,::-1].copy()		#still has three channels
 		crop_img = cv_img[self.height/4:self.height-self.height/4,self.width/4:self.width-self.width/4]
-		crop_img = cv2.resize(crop_img,dsize=(640,240),fx=2,fy=2)
-		return crop_img
+		crop_img = cv2.resize(crop_img,dsize=(640,240),fx=2,fy=2)		
+		crop_img = cv2.cvtColor(crop_img,cv2.COLOR_BGR2GRAY)
+		(thresh, img_bin) = cv2.threshold(crop_img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+		return img_bin
 
 if __name__=="__main__":
 	lb = LeapBridge(640,240)
