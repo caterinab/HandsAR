@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 import warnings
 
 class LeapBridge():
-	mx,my,img_leap,img_raw,img_rectified = {},{},{},{},{}	
+	mx,my,img_leap,img_raw,img_rectified = {},{},{},{},{}
 	img_disparity = None
 	img_disparity2 = None
 	sides = ["left","right"]
@@ -26,48 +26,49 @@ class LeapBridge():
 		
 		#generating the sbm object for stereo analysis:
 		self.sbm = cv2.StereoBM_create(numDisparities=112, blockSize=9)
-		self.sbm.setPreFilterType(1)
-		self.sbm.setPreFilterSize(5)
-		self.sbm.setPreFilterCap(39)
+		#self.sbm.setPreFilterType(1)
+		#self.sbm.setPreFilterSize(5)
+		#self.sbm.setPreFilterCap(10)
 		#self.sbm.minDisparity = 0 by default
-		self.sbm.setTextureThreshold(607)
-		self.sbm.setUniquenessRatio(8)
+		self.sbm.setTextureThreshold(550)
+		self.sbm.setUniquenessRatio(4)
 		
 		#self.sbm.speckleRange = 8
 		#self.sbm.speckleWindowSize = 0
 		
 		#self.bm = cv2.StereoBM_create(cv2.FISH_EYE_PRESET,80,11)
-		self.bm = cv2.fisheye
+		#self.bm = cv2.fisheye
 		
 		#generating blank image here for re-use later:
-		self.img_blank = np.zeros([self.height,self.width,3]).astype("uint8")
-		self.kernel = np.ones((3,3),np.uint8)
-		self.d2d = np.array([[1.0,0.,0.,-5.0638e+02],[0.,1.,0.,-2.3762e+02],[0.,0.,0.,1.3476e+03],[0.,0.,6.9349981e-01,3.503271]])	#depth-to-dist mapping
+		#self.img_blank = np.zeros([self.height,self.width,3]).astype("uint8")
+		#self.kernel = np.ones((3,3),np.uint8)
+		#self.d2d = np.array([[1.0,0.,0.,-5.0638e+02],[0.,1.,0.,-2.3762e+02],[0.,0.,0.,1.3476e+03],[0.,0.,6.9349981e-01,3.503271]])	#depth-to-dist mapping
 		print ("*Initializing...")
 		while not self.controller.is_connected:		#always a delay prior to active frames
-			time.sleep(0.75)		
+			time.sleep(0.75)
 		print ("*Leap initialized")
 
-		if mapFile is not None:
-			print ("*Loading map file at: "+repr(mapFile))
-			m = np.load(mapFile).tolist()
-			if "mx" in m.keys() and "my" in m.keys():
-				mx = m["mx"]
-				my = m["my"]
-				if all(s in mx.keys() and s in my.keys() for s in self.sides):
-					if all(mx[s].shape[0]==self.height and mx[s].shape[1]==self.width and my[s].shape[0]==self.height and my[s].shape[1]==self.width for s in self.sides):
-						print ("*Map loaded successfully!")
-						self.mx = mx
-						self.my = my
-					else:
-						print ("*ERROR: Map dimensionality mismatch")
-				else:
-					print ("*ERROR: Map key mismatch")	
-			else:
-				print ("*ERROR: Map file missing mappings")			
+		#if mapFile is not None:
+		#	print ("*Loading map file at: "+repr(mapFile))
+		#	m = np.load(mapFile).tolist()
+		#	if "mx" in m.keys() and "my" in m.keys():
+		#		mx = m["mx"]
+		#		my = m["my"]
+		#		if all(s in mx.keys() and s in my.keys() for s in self.sides):
+		#			if all(mx[s].shape[0]==self.height and mx[s].shape[1]==self.width and my[s].shape[0]==self.height and my[s].shape[1]==self.width for s in self.sides):
+		#				print ("*Map loaded successfully!")
+		#				self.mx = mx
+		#				self.my = my
+		#			else:
+		#				print ("*ERROR: Map dimensionality mismatch")
+		#		else:
+		#			print ("*ERROR: Map key mismatch")	
+		#	else:
+		#		print ("*ERROR: Map file missing mappings")			
+				
 		if len(self.mx)==0 or len(self.my)==0:
-			print ("*Missing or invalid map file...")
-			self._genMap()
+			#print ("*Missing or invalid map file...")
+			self._genMapRectified()	
 			self.view()
 
 	def view(self):
@@ -100,6 +101,7 @@ class LeapBridge():
 
 	def _genDisparity(self):
 		self.img_disparity = self.getDisparity(self.img_raw["left"],self.img_raw["right"])
+		#self.img_disparity2 = self.getDisparity(self.img_rectified["left"],self.img_rectified["right"])
 		#self.img_disparity = cv2.medianBlur(self.img_disparity,3)
 
 	def _genRectified(self):
@@ -116,11 +118,32 @@ class LeapBridge():
 				self._poll()
 			for iy in xrange(self.height):
 				for ix in xrange(self.width):
-					if self.height/4 <= iy <= self.height-self.height/4 and self.width/4 <= iy <= self.width-self.width/4:
+					#if self.height/4 <= iy <= self.height-self.height/4 and self.width/4 <= iy <= self.width-self.width/4:
 						v_input = Leap.Vector(float(ix)/self.width, float(iy)/self.height,0)
 						v_input.x = (v_input.x-self.img_leap[s].ray_offset_x) / self.img_leap[s].ray_scale_x
 						v_input.y = (v_input.y-self.img_leap[s].ray_offset_y) / self.img_leap[s].ray_scale_y
 						ip = self.img_leap[s].warp(v_input)
+						if ip.x>=0 and ip.x<self.width and ip.y>=0 and ip.y<self.height:
+							self.mx[s][iy,ix] = int(ip.x)
+							self.my[s][iy,ix] = int(ip.y)
+						else:
+							self.mx[s][iy,ix] = -1
+							self.my[s][iy,ix] = -1
+							
+	def _genMapRectified(self):
+		for s in self.sides:
+			print ("Generating map for "+s+"...")
+			self.mx[s] = (np.ones([self.height,self.width])*-1).astype('float32')
+			self.my[s] = (np.ones([self.height,self.width])*-1).astype('float32')
+
+			if len(self.img_leap)==0 or self.img_leap[s] is None:
+				self._poll()
+			for iy in xrange(self.height):
+				for ix in xrange(self.width):
+					if self.height/4 <= iy <= self.height-self.height/4 and self.width/4 <= iy <= self.width-self.width/4:
+						v_input = Leap.Vector(float(ix)/self.width, float(iy)/self.height,0)
+						ip = self.img_leap[s].rectify(v_input)
+						
 						if ip.x>=0 and ip.x<self.width and ip.y>=0 and ip.y<self.height:
 							self.mx[s][iy,ix] = int(ip.x)
 							self.my[s][iy,ix] = int(ip.y)
@@ -147,7 +170,9 @@ class LeapBridge():
 		#generate former cv images from cv2:
 		imgL = cv2.cvtColor(cv_imgL,cv2.COLOR_BGR2GRAY)
 		imgR = cv2.cvtColor(cv_imgR,cv2.COLOR_BGR2GRAY)
-		disparity = self.sbm.compute(imgL,imgR)
+		disparity = self.sbm.compute(imgL,imgR,cv2.CV_32F)
+		#kernel = np.ones((5,5),np.uint8)
+		#disparity = cv2.morphologyEx(disparity, cv2.MORPH_CLOSE, kernel)
 		#plt.imshow(disparity,'gray')
 		#plt.show()
 		cv2.normalize(disparity,disparity,0,255,norm_type=cv2.NORM_MINMAX)
@@ -172,8 +197,9 @@ class LeapBridge():
 		pil_img = self.convertPIL(leap_img)
 		cv_img = np.array(pil_img)[:,:,::-1].copy()		#still has three channels
 		crop_img = cv_img[self.height/4:self.height-self.height/4,self.width/4:self.width-self.width/4]
-		crop_img = cv2.resize(crop_img,dsize=(640,240),fx=2,fy=2)
+		crop_img = cv2.resize(crop_img,dsize=(self.width,self.height),fx=2,fy=2)
 		return crop_img
+		#return cv_img
 
 if __name__=="__main__":
 	lb = LeapBridge(640,240)

@@ -5,16 +5,16 @@ using UnityEngine;
 // Define the functions which can be called from the .dll.
 internal static class OpenCVInterop
 {
-    [DllImport("UnityOpenCVSample")]
+    [DllImport("OpenCV")]
     internal static extern int Init(ref int outCameraWidth, ref int outCameraHeight);
 
-    [DllImport("UnityOpenCVSample")]
+    [DllImport("OpenCV")]
     internal static extern int Close();
 
-    [DllImport("UnityOpenCVSample")]
+    [DllImport("OpenCV")]
     internal static extern int SetScale(int downscale);
 
-    [DllImport("UnityOpenCVSample")]
+    [DllImport("OpenCV")]
     internal unsafe static extern void Detect(CvCircle* outFaces, int maxOutFacesCount, ref int outDetectedFacesCount);
 }
 
@@ -77,9 +77,9 @@ public class OpenCVFaceDetection : MonoBehaviour
             return;
 
         int detectedFaceCount = 0;
-        unsafe
+        unsafe // allows to use pointers in C#
         {
-            fixed (CvCircle* outFaces = _faces)
+            fixed (CvCircle* outFaces = _faces)  // fixed: the variable won't be moved from the original address (can be used to exchange stream data between Unity and OpenCV)
             {
                 OpenCVInterop.Detect(outFaces, _maxFaceDetectCount, ref detectedFaceCount);
             }

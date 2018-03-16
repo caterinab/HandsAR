@@ -140,6 +140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0195c4773d031e542b6b187652653dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frameProvider: {fileID: 0}
+  counter: 0
+  fps: 
+  enable: 0
 --- !u!4 &9393411
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c592f16851a620743868a31232613370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _modelsParent: {fileID: 0}
+  ModelPool: []
 --- !u!114 &50716286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +185,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b86fd81a567a946b68b73957508d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateMachine: {fileID: 321771970}
+  maxBufferSize: 10
+  buffer: []
+  websocketIP: 192.168.84.126
+  recordToLog: 0
 --- !u!114 &50716287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,10 +201,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd32d14e326202c4eb23af7ee941f99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  editTimePose: 0
+  _isHeadMounted: 0
+  _temporalWarping: {fileID: 0}
+  _frameOptimization: 0
+  _updateHandInPrecull: 0
 --- !u!4 &50716290 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432918, guid: b9c7aaf0d314cb847a3b2a20e893f1b6, type: 2}
   m_PrefabInternal: {fileID: 1925449668}
+--- !u!1 &197645705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 197645708}
+  m_Layer: 0
+  m_Name: FaceDetection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &197645708
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 197645705}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.9812675, y: -5.5517006, z: 7.2770667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &234361672
 Prefab:
   m_ObjectHideFlags: 0
@@ -1071,6 +1115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09636cc2aa893a1488ee9d2bc4076988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
 --- !u!4 &321771971
 Transform:
   m_ObjectHideFlags: 0
