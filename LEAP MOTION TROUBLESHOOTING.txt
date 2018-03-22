@@ -1,0 +1,24 @@
+Per farlo funzionare:
+
+-Collegare PC ad una rete ethernet
+-Avviare hotspot "Ignoreme2"
+-Connettere il telefono alla rete appena creata
+-Avviare il visualizzatore diagnostico o avviare il progetto in unity e switchare la modalita in front head. 
+Si puo vedere la modalita dal logger del leap motion control panel..
+(Se non si fa questo passaggio il tracking funziona male)
+
+-Avviare app dal telefono, se tutto va bene funzionera! Se non si vedono le mani necessario ricompilare cambiando ip sull-asset in unity. Va messo l-ip della macchina che ha il leap motion attaccato nella rete locale (questo pc, di solito 192.168.137.1) 
+
+CONSIGLI:
+-Rimuovere braccialetti e orologi, spazio non troppo vicino ai muri e non davanti a schermi
+
+POSSIBILI PROBLEMI:
+- Il telefono si disconnette dal wifi. Riconnettersi e riavviare app
+- Il servizio leap motion si blocca da solo (lo fa frequentemente). Riavviarlo e riavviare app
+- Ip sbagliato. Ricompilare con ip corretto.
+- bad tracking: avviare visualizzatore diagnostico e impostarlo su head mounted
+ 
+
+Progetto si trova in: desktop/tirocinio/projv3/leap-single-vr
+Avviare da Unity su desktop
+Scena 'Demo'

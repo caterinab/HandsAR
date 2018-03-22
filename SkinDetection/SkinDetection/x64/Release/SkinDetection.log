@@ -1,0 +1,19 @@
+﻿  stdafx.cpp
+  main.cpp
+main.obj : error LNK2001: unresolved external symbol "private: char * __cdecl cv::String::allocate(unsigned __int64)" (?allocate@String@cv@@AEAAPEAD_K@Z)
+main.obj : error LNK2001: unresolved external symbol "private: void __cdecl cv::String::deallocate(void)" (?deallocate@String@cv@@AEAAXXZ)
+main.obj : error LNK2001: unresolved external symbol "public: void __cdecl cv::Mat::copySize(class cv::Mat const &)" (?copySize@Mat@cv@@QEAAXAEBV12@@Z)
+main.obj : error LNK2001: unresolved external symbol "void __cdecl cv::fastFree(void *)" (?fastFree@cv@@YAXPEAX@Z)
+main.obj : error LNK2001: unresolved external symbol "public: void __cdecl cv::Mat::convertTo(class cv::_OutputArray const &,int,double,double)const " (?convertTo@Mat@cv@@QEBAXAEBV_OutputArray@2@HNN@Z)
+main.obj : error LNK2001: unresolved external symbol "public: void __cdecl cv::Mat::deallocate(void)" (?deallocate@Mat@cv@@QEAAXXZ)
+main.obj : error LNK2001: unresolved external symbol "public: __cdecl cv::VideoCapture::VideoCapture(class cv::String const &)" (??0VideoCapture@cv@@QEAA@AEBVString@1@@Z)
+main.obj : error LNK2001: unresolved external symbol "public: virtual __cdecl cv::VideoCapture::~VideoCapture(void)" (??1VideoCapture@cv@@UEAA@XZ)
+main.obj : error LNK2001: unresolved external symbol "void __cdecl cv::cvtColor(class cv::_InputArray const &,class cv::_OutputArray const &,int,int)" (?cvtColor@cv@@YAXAEBV_InputArray@1@AEBV_OutputArray@1@HH@Z)
+main.obj : error LNK2001: unresolved external symbol "double __cdecl cv::threshold(class cv::_InputArray const &,class cv::_OutputArray const &,double,double,int)" (?threshold@cv@@YANAEBV_InputArray@1@AEBV_OutputArray@1@NNH@Z)
+main.obj : error LNK2001: unresolved external symbol "void __cdecl cv::imshow(class cv::String const &,class cv::_InputArray const &)" (?imshow@cv@@YAXAEBVString@1@AEBV_InputArray@1@@Z)
+main.obj : error LNK2001: unresolved external symbol "void __cdecl cv::inRange(class cv::_InputArray const &,class cv::_InputArray const &,class cv::_InputArray const &,class cv::_OutputArray const &)" (?inRange@cv@@YAXAEBV_InputArray@1@00AEBV_OutputArray@1@@Z)
+main.obj : error LNK2001: unresolved external symbol "void __cdecl cv::resize(class cv::_InputArray const &,class cv::_OutputArray const &,class cv::Size_<int>,double,double,int)" (?resize@cv@@YAXAEBV_InputArray@1@AEBV_OutputArray@1@V?$Size_@H@1@NNH@Z)
+main.obj : error LNK2001: unresolved external symbol "public: virtual bool __cdecl cv::VideoCapture::isOpened(void)const " (?isOpened@VideoCapture@cv@@UEBA_NXZ)
+main.obj : error LNK2001: unresolved external symbol "int __cdecl cv::waitKey(int)" (?waitKey@cv@@YAHH@Z)
+main.obj : error LNK2001: unresolved external symbol "public: class cv::Mat __cdecl cv::Mat::reshape(int,int,int const *)const " (?reshape@Mat@cv@@QEBA?AV12@HHPEBH@Z)
+C:\Users\mirko\Desktop\Caterina\LeapAR\SkinDetection\x64\Release\SkinDetection.exe : fatal error LNK1120: 16 unresolved externals

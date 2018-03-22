@@ -1,13 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using Vuforia;
-using RedMatter.SkinDetection;
-using System.Drawing;
-using System.IO;
-using System;
-using System.ComponentModel;
-using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+
+internal static class OpenCVInterop
+{
+    [DllImport("native-lib")]
+    unsafe internal static extern char* DetectSkin(int h, int w, char* pixels);
+}
 
 public class CameraImageAccess : MonoBehaviour
 {
@@ -95,14 +94,16 @@ public class CameraImageAccess : MonoBehaviour
                             pixels[1] + ", " +
                             pixels[2] + ", ...\n"
                         );
-                        
-                        TypeConverter tc = TypeDescriptor.GetConverter(typeof(Bitmap));
-                        Bitmap bmp = (Bitmap)tc.ConvertFrom(pixels);
 
-                        BaseDetector detector = new BaseDetector(bmp, new SimpleSkinDetector1());
-                        Bitmap output = detector.SkinDetectionImage;
+                        unsafe
+                        {
+                            fixed (char* input = System.Text.Encoding.UTF8.GetString(pixels).ToCharArray())
+                            {
+                                char* output = OpenCVInterop.DetectSkin(image.Height, image.Width, input);
 
-                        Debug.Log("\nTEST: " + output.ToString());
+                                Debug.Log("\nTEST: " + output[0] + output[1] + output[2] + output[3] + output[4]);
+                            }
+                        }
                         /*
                         Texture2D tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false); // RGB24
                         tex.LoadRawTextureData(pixels);
