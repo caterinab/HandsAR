@@ -4,7 +4,7 @@
 using namespace cv;
 using std::cout;
 
-extern "C" void DetectSkin(int h, int w, char* input_frame) {
+extern "C" char * DetectSkin(int h, int w, char* input_frame) {
 	Mat3b frame;
 	Mat1b output_frame;
 	frame = Mat(h, w, CV_8UC3, input_frame);
@@ -25,17 +25,20 @@ extern "C" void DetectSkin(int h, int w, char* input_frame) {
 	//resize(frame, frame, Size(), 2, 2, INTER_LINEAR);
 	resize(output_frame, output_frame, Size(), 2, 2, INTER_LINEAR);
 	
-	Mat1b t = Mat(720, 1280, CV_8UC3, output_frame.data);
+	imshow("", output_frame);
+	waitKey(0);
 
-	imshow("", t);
+	uchar * p = output_frame.data;
+	
+	uchar **array = new uchar*[output_frame.rows];
+	for (int i = 0; i < output_frame.rows; ++i)
+		array[i] = new uchar[output_frame.cols];
 
+	for (int i = 0; i < output_frame.rows; ++i)
+		array[i] = output_frame.ptr<uchar>(i);
 
+	return (char *) array;
 }
 
 int main()
-{
-	VideoCapture capture("sample.mp4");
-	Mat frame;
-	capture >> frame;
-	DetectSkin(720, 1280, (char*)frame.data);
-}
+{}

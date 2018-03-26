@@ -101,7 +101,7 @@ public class CameraImageAccess : MonoBehaviour
                             {
                                 char* output = OpenCVInterop.DetectSkin(image.Height, image.Width, input);
 
-                                Debug.Log("\nTEST: " + output[0] + output[1] + output[2] + output[3] + output[4]);
+                                Debug.Log("\nTEST: " + output[0].ToString() + output[1].ToString() + output[2].ToString() + "...\n");
                             }
                         }
                         /*

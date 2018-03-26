@@ -114,13 +114,13 @@ xcopy /yr "E:\dev\LeapSDK\lib\x86\Leap.dll" "$(OutDir)"</Command>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\include;C:\Users\mirko\Downloads\LeapDeveloperKit_3.2.1+45911_win\LeapSDK\include;C:\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv\OpenCV 3.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\lib;C:\Users\mirko\Downloads\LeapDeveloperKit_3.2.1+45911_win\LeapSDK\lib\x64;C:\Users\mirko\Downloads\LeapScan-master;C:\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories);C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;Leap.lib;opencv_world341d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\opencv\OpenCV 3.1\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world341d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -166,15 +166,15 @@ xcopy /y "$(ProjectDir)libs\32\sfml-window-2.dll" "$(OutDir)"</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\include;C:\Users\mirko\Downloads\LeapDeveloperKit_3.2.1+45911_win\LeapSDK\include;C:\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv\OpenCV 3.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\lib;C:\Users\mirko\Downloads\LeapDeveloperKit_3.2.1+45911_win\LeapSDK\lib\x64;C:\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories);C:\Users\mirko\Downloads\SFML-2.4.2-windows-vc14-64-bit\SFML-2.4.2\bin</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\opencv\OpenCV 3.1\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world341.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
