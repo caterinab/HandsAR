@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 internal static class OpenCVInterop
 {
     [DllImport("native-lib")]
-    unsafe internal static extern char* DetectSkin(int h, int w, char* pixels);
+    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels);
 }
 
 public class CameraImageAccess : MonoBehaviour
@@ -16,8 +16,9 @@ public class CameraImageAccess : MonoBehaviour
 
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
+    Texture2D tex;
     //private RawImage rawImage;
-    
+
     #endregion // PRIVATE_MEMBERS
 
     #region MONOBEHAVIOUR_METHODS
@@ -36,6 +37,7 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
 
+        tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -44,7 +46,6 @@ public class CameraImageAccess : MonoBehaviour
 
     void OnVuforiaStarted()
     {
-
         // Try register camera image format
         if (CameraDevice.Instance.SetFrameFormat(mPixelFormat, true))
         {
@@ -88,29 +89,20 @@ public class CameraImageAccess : MonoBehaviour
 
                     if (pixels != null && pixels.Length > 0)
                     {
-                        Debug.Log(
-                            "\nImage pixels: " +
-                            pixels[0] + ", " +
-                            pixels[1] + ", " +
-                            pixels[2] + ", ...\n"
-                        );
-
-                        unsafe
-                        {
-                            fixed (char* input = System.Text.Encoding.UTF8.GetString(pixels).ToCharArray())
-                            {
-                                char* output = OpenCVInterop.DetectSkin(image.Height, image.Width, input);
-
-                                Debug.Log("\nTEST: " + output[0].ToString() + output[1].ToString() + output[2].ToString() + "...\n");
-                            }
-                        }
-                        /*
-                        Texture2D tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false); // RGB24
-                        tex.LoadRawTextureData(pixels);
+                        //Debug.Log("\nImage pixels: " + pixels[0] + ", " + pixels[1] + ", " + pixels[2] + ", ...\n");
+                        
+                        Debug.Log("\nINPUT: " + (int)pixels[0] + " " + (int)pixels[1] + " " + (int)pixels[2] + " " + (int)pixels[3] + " " + (int)pixels[4] + " ...\n");
+                        
+                        System.IntPtr unmanagedPointer = Marshal.AllocHGlobal(pixels.Length);
+                        Marshal.Copy(pixels, 0, unmanagedPointer, pixels.Length);
+                        OpenCVInterop.DetectSkin(image.Height, image.Width, ref unmanagedPointer);
+                        byte[] t = new byte[pixels.Length];
+                        Marshal.Copy(unmanagedPointer, t, 0, t.Length);
+                        Marshal.FreeHGlobal(unmanagedPointer);
+                        
+                        tex.LoadRawTextureData(t);
                         tex.Apply();
-                        rawImage.texture = tex;
-                        rawImage.material.mainTexture = tex;
-                        */
+                        GameObject.Find("Quad").GetComponent<Renderer>().material.mainTexture = tex;           
                     }
                 }
             }
