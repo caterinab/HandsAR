@@ -1,28 +1,2 @@
 ﻿  main.cpp
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\xutility(2400): warning C4244: '=': conversion from 'float' to 'uchar', possible loss of data
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\xutility(2419): note: see reference to function template instantiation '_OutIt std::_Copy_unchecked1<_InIt,_OutIt>(_InIt,_InIt,_OutIt,std::_General_ptr_iterator_tag)' being compiled
-          with
-          [
-              _OutIt=unsigned char *,
-              _InIt=float *
-          ]
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\xutility(2432): note: see reference to function template instantiation '_OutIt *std::_Copy_unchecked<_Iter,unsigned char*>(_InIt,_InIt,_OutIt)' being compiled
-          with
-          [
-              _OutIt=unsigned char *,
-              _Iter=float *,
-              _InIt=float *
-          ]
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.13.26128\include\xutility(2441): note: see reference to function template instantiation '_OutIt std::_Copy_no_deprecate<_InIt,_OutIt>(_InIt,_InIt,_OutIt)' being compiled
-          with
-          [
-              _OutIt=stdext::checked_array_iterator<uchar *>,
-              _InIt=float *
-          ]
-  c:\users\cbattisti\documents\handsar\skindetection\skindetection\main.cpp(63): note: see reference to function template instantiation '_OutIt std::copy<float*,stdext::checked_array_iterator<uchar *>>(_InIt,_InIt,_OutIt)' being compiled
-          with
-          [
-              _OutIt=stdext::checked_array_iterator<uchar *>,
-              _InIt=float *
-          ]
   SkinDetection.vcxproj -> C:\Users\cbattisti\Documents\HandsAR\SkinDetection\x64\Debug\SkinDetection.exe

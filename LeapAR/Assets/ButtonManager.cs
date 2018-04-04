@@ -45,7 +45,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.x += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void IncrementY()
@@ -54,7 +54,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.y += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void IncrementZ()
@@ -63,7 +63,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.z += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementX()
@@ -72,7 +72,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.x -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementY()
@@ -81,7 +81,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.y -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementZ()
@@ -90,6 +90,6 @@ public class ButtonManager : MonoBehaviour {
 
         p.z -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 }

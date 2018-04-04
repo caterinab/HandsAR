@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour {
     private float delta = 0.005f;
+    private float delta2 = 1f;
 
     private void Start()
     {
@@ -15,6 +16,65 @@ public class ButtonManager : MonoBehaviour {
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
+
+        float quadX = PlayerPrefs.GetFloat("quadX", 0);
+        float quadY = PlayerPrefs.GetFloat("quadY", 0);
+        GameObject.Find("Quad").transform.localPosition = new Vector2(x, y);
+    }
+    
+    public void SaveQuadOffset(float x, float y)
+    {
+        PlayerPrefs.SetFloat("quadX", x);
+        PlayerPrefs.SetFloat("quadY", y);
+    }
+
+    public void ResetQuad() {
+        GameObject.Find("Quad").transform.localPosition = new Vector2(0, 0);
+        SaveQuadOffset(0, 0);
+    }
+
+    public void QuadUp()
+    {
+        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+
+        p.y += delta2;
+
+        GameObject.Find("Quad").transform.localPosition = p;
+
+        SaveQuadOffset(p.x, p.y);
+    }
+
+    public void QuadDown()
+    {
+        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+
+        p.y -= delta2;
+
+        GameObject.Find("Quad").transform.localPosition = p;
+
+        SaveQuadOffset(p.x, p.y);
+    }
+
+    public void QuadRight()
+    {
+        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+
+        p.x += delta2;
+
+        GameObject.Find("Quad").transform.localPosition = p;
+
+        SaveQuadOffset(p.x, p.y);
+    }
+
+    public void QuadLeft()
+    {
+        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+
+        p.x -= delta2;
+
+        GameObject.Find("Quad").transform.localPosition = p;
+
+        SaveQuadOffset(p.x, p.y);
     }
 
     public void StartMainScene() {
@@ -45,7 +105,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.x += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void IncrementY()
@@ -54,7 +114,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.y += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void IncrementZ()
@@ -63,7 +123,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.z += delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementX()
@@ -72,7 +132,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.x -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementY()
@@ -81,7 +141,7 @@ public class ButtonManager : MonoBehaviour {
 
         p.y -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 
     public void DecrementZ()
@@ -90,6 +150,6 @@ public class ButtonManager : MonoBehaviour {
 
         p.z -= delta;
 
-        GameObject.Find("LeapHandController").transform.localPosition = new Vector3(p.x, p.y, p.z);
+        GameObject.Find("LeapHandController").transform.localPosition = p;
     }
 }
