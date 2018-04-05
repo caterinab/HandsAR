@@ -9,7 +9,7 @@
 		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" }
 		//Tags{ "Queue" = "Geometry-1" "ForceNoShadowCasting" = "true" "IgnoreProjector" = "true" }  // queue = 1999 
 		LOD 200
-
+		
 		CGPROGRAM
 		#pragma surface surf Lambert alpha
 
@@ -38,13 +38,13 @@
 
 			//if colour is too close to the transparent one, discard it.
 			//note: you could do cleverer things like fade out the alpha
-			//if (transparent_diff_squared > _Threshold)
-			//	discard;
+			if (transparent_diff_squared > _Threshold)
+				output_col.a = 0;
 
-			clip(_Threshold - transparent_diff_squared);
+			//clip(_Threshold - transparent_diff_squared);
 
 			//output albedo and alpha just like a normal shader
-			//o.Albedo = output_col.rgb;
+			o.Albedo = output_col.rgb;
 			o.Alpha = output_col.a;
 		}
 		

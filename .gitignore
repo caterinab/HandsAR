@@ -14,21 +14,6 @@ sysinfo.txt
 *.pidb.meta
 
 ###
-# VS/MD solution and project files
-###
-[Ee]xportedObj/
-*.booproj
-*.csproj
-*.sln
-*.suo
-*.svd
-*.unityproj
-*.user
-*.userprefs
-*.pidb
-.DS_Store
-
-###
 # OS generated
 ###
 .DS_Store
