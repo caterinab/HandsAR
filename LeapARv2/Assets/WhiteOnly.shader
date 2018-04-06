@@ -44,6 +44,8 @@
 			//clip(_Threshold - transparent_diff_squared);
 
 			//output albedo and alpha just like a normal shader
+			//output_col.rgb = o.Albedo;
+			//output_col.a = o.Alpha;
 			o.Albedo = output_col.rgb;
 			o.Alpha = output_col.a;
 		}
