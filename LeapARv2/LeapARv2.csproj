@@ -268,6 +268,7 @@
     <Compile Include="Assets\Common\SplashAbout\LoadingScreen.cs" />
     <Compile Include="Assets\Common\TapHandler.cs" />
     <Compile Include="Assets\Common\TrackableSettings.cs" />
+    <Compile Include="Assets\HandDepthTest.cs" />
     <Compile Include="Assets\LeapMotion\Core\Scripts\Algorithms\SlidingMax.cs" />
     <Compile Include="Assets\LeapMotion\Core\Scripts\Algorithms\SmoothedFloat.cs" />
     <Compile Include="Assets\LeapMotion\Core\Scripts\Algorithms\SmoothedQuaternion.cs" />
@@ -452,12 +453,12 @@
     <Compile Include="Assets\Script\LeapServiceProviderNew.cs" />
     <Compile Include="Assets\Script\StateMachine.cs" />
     <Compile Include="Assets\Script\WebsocketConnection.cs" />
+    <Compile Include="Assets\UIPolygon.cs" />
     <Compile Include="Assets\Vuforia\Scripts\DefaultInitializationErrorHandler.cs" />
     <Compile Include="Assets\Vuforia\Scripts\DefaultTrackableEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\DepthMask.shader" />
-    <None Include="Assets\Diffuse RefNotEqualOne.shader" />
     <None Include="Assets\Editor\Vuforia\CylinderTargetTextures\VuforiaMars_Images\authoringinfo.xml" />
     <None Include="Assets\Editor\Vuforia\Emulator\VuforiaEmulator.xml" />
     <None Include="Assets\Editor\Vuforia\ForPrint\ModelTarget\readme_3dprint.txt" />
@@ -474,8 +475,6 @@
     <None Include="Assets\LeapMotion\Core\Resources\VertexOffsetShader.shader" />
     <None Include="Assets\LeapMotion\Core\Version.txt" />
     <None Include="Assets\LeapMotion\Core\readme.txt" />
-    <None Include="Assets\MaskOneZLess.shader" />
-    <None Include="Assets\NormalExtrusion.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest-Cardboard.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest-Daydream.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
@@ -489,14 +488,13 @@
     <None Include="Assets\SamplesResources\Shaders\RenderOcclusionLayer.shader" />
     <None Include="Assets\SamplesResources\Shaders\SkyBlend.shader" />
     <None Include="Assets\SamplesResources\Shaders\TransparentUnlit.shader" />
+    <None Include="Assets\SkinOnly.shader" />
     <None Include="Assets\StreamingAssets\Vuforia\FSpinner.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Images.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_ModelTarget.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Object_OT.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_VuMark.xml" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
-    <None Include="Assets\Test.shader" />
-    <None Include="Assets\Unlit-Normal.shader" />
     <None Include="Assets\Vuforia\Shaders\BrightTexture.shader" />
     <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />
     <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
@@ -505,7 +503,6 @@
     <None Include="Assets\Vuforia\Shaders\OutlineOpaque.shader" />
     <None Include="Assets\Vuforia\Shaders\Text3D.shader" />
     <None Include="Assets\Vuforia\Shaders\VertexLitWithZ.shader" />
-    <None Include="Assets\WhiteOnly.shader" />
     <None Include="Assets\license_3rdpartynotice.txt" />
     <None Include="Assets\link.xml" />
     <None Include="Assets\readme_SDK.txt" />

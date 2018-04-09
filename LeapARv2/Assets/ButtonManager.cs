@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour {
     private float delta = 0.005f;
     private float delta2 = 1f;
-    private float delta3 = 0.01f;
+    //private float delta3 = 0.01f;
 
     private void Start()
     {
@@ -22,7 +22,7 @@ public class ButtonManager : MonoBehaviour {
         float quadY = PlayerPrefs.GetFloat("quadY", 0);
         GameObject.Find("Quad").transform.localPosition = new Vector2(quadX, quadY);
     }
-
+    /*
     public void LightDown()
     {
         GameObject.Find("DirectionalLight").GetComponent<Light>().intensity -= delta3;
@@ -32,7 +32,7 @@ public class ButtonManager : MonoBehaviour {
     {
         GameObject.Find("DirectionalLight").GetComponent<Light>().intensity += delta3;
     }
-
+    */
     public void SaveQuadOffset(float x, float y)
     {
         PlayerPrefs.SetFloat("quadX", x);

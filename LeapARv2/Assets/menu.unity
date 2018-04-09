@@ -1825,7 +1825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _modelsParent: {fileID: 1812497203}
   ModelPool:
-  - GroupName: Graphics_Hands
+  - GroupName: GraphicsHands
     _handPool: {fileID: 0}
     LeftModel: {fileID: 118609739}
     IsLeftToBeSpawned: 0
@@ -1838,7 +1838,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: Leap.Unity.Hands+HandEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - GroupName: Physics_Hands
+  - GroupName: PhysicsHands
     _handPool: {fileID: 0}
     LeftModel: {fileID: 2146723918}
     IsLeftToBeSpawned: 0
