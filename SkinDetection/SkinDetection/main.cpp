@@ -7,8 +7,8 @@ using std::vector;
 
 extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
 	Mat3b frame;
-	Mat1b output_frame, inv;
-	RNG rng(12345);
+	Mat1b output_frame;//, inv;
+	//RNG rng(12345);
 
 	frame = Mat(h, w, CV_8UC3, *input_frame);
 	resize(frame, frame, Size(), 0.5, 0.5, INTER_AREA);
@@ -22,6 +22,18 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
 	Scalar hsv_l(0, 38, 51);
 	Scalar hsv_h(17, 250, 242);
 	inRange(frame, hsv_l, hsv_h, output_frame);
+
+	/*
+	// A image with size greater than the present object is created, it is needed from floodFill()
+	cv::Mat mask = cv::Mat::zeros(frame.rows + 2, frame.cols + 2, CV_8U);
+
+	cv::floodFill(output_frame, mask, cv::Point(0, 0), 255, 0, cv::Scalar(), cv::Scalar(), 4 + (255 << 8) + cv::FLOODFILL_MASK_ONLY);
+	//NOTE Since the mask is larger than the filled image, a pixel  (x, y) in image corresponds to the pixel (x+1, y+1) in the mask .
+
+	//remove the extra rows/cols added earlier in the initialization of the mask, if you want of course it is just "optional"
+	mask(Range(1, mask.rows - 1), Range(1, mask.cols - 1)).copyTo(output_frame);
+	bitwise_not(output_frame, output_frame);
+	*/
 	/*
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;

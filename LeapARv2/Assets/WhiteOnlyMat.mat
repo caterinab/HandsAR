@@ -51,7 +51,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 17ad64ff21252b4419506e1cc830ffc5, type: 3}
+        m_Texture: {fileID: 2800000, guid: cf5d1c9d6f662cc49bdb17ae2fec5302, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -99,7 +99,7 @@ Material:
     - _StencilOp: 71.8
     - _StencilReadMask: 15.6
     - _StencilWriteMask: -18.2
-    - _Threshold: 1.62
+    - _Threshold: 0.1
     - _UVSec: 0
     - _ZWrite: 1
     - _isLeftHand: 0
@@ -110,4 +110,4 @@ Material:
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _TransparentColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TransparentColor: {r: 0, g: 0, b: 0, a: 1}

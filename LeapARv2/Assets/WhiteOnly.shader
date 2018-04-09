@@ -12,6 +12,7 @@
 		
 		CGPROGRAM
 		#pragma surface surf Lambert alpha
+		#pragma surface surf NoLighting
 
 		sampler2D _MainTex;
 
@@ -22,6 +23,10 @@
 		fixed4 _Color;
 		fixed4 _TransparentColor;
 		half _Threshold;
+
+		fixed4 LightingNoLighting(SurfaceOutput s, fixed3 lightDir, fixed atten) {
+			return fixed4(0, 0, 0, 0);//half4(s.Albedo, s.Alpha);
+		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
 			// Read color from the texture
@@ -38,15 +43,14 @@
 
 			//if colour is too close to the transparent one, discard it.
 			//note: you could do cleverer things like fade out the alpha
-			if (transparent_diff_squared > _Threshold)
-				output_col.a = 0;
+			//if (transparent_diff_squared < _Threshold)
+			//	output_col.a = 0;
 
-			//clip(_Threshold - transparent_diff_squared);
+			clip(transparent_diff_squared - _Threshold);
 
 			//output albedo and alpha just like a normal shader
-			//output_col.rgb = o.Albedo;
-			//output_col.a = o.Alpha;
-			o.Albedo = output_col.rgb;
+			o.Emission = output_col.rgb;
+			//o.Albedo = output_col.rgb;
 			o.Alpha = output_col.a;
 		}
 		
