@@ -28,6 +28,11 @@ public class ButtonManager : MonoBehaviour {
         SceneManager.LoadSceneAsync("menu");
     }
 
+    public void ResetCube()
+    {
+        GameObject.Find("CustomCube").transform.localPosition = new Vector3(0, 1, 0);
+    }
+
     public void ResetOffset()
     {
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(0, 0, 0);

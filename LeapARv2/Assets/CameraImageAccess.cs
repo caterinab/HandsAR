@@ -38,10 +38,7 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
 
         tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
-        GameObject UICanvas = GameObject.Find("Canvas");
         Debug.Log("SCREEN SIZE: " + Screen.width + "x" + Screen.height);
-        RectTransform rt = UICanvas.GetComponent(typeof(RectTransform)) as RectTransform;
-        rt.sizeDelta = new Vector2(Screen.width, Screen.height);
     }
 
     #endregion // MONOBEHAVIOUR_METHODS

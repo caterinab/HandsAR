@@ -1629,6 +1629,10 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: 0.09146038
       objectReference: {fileID: 0}
+    - target: {fileID: 196280, guid: 23f2cce114628a448bfeaae171b4c0c0, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 23f2cce114628a448bfeaae171b4c0c0, type: 2}
   m_IsPrefabParent: 0
@@ -1838,19 +1842,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: Leap.Unity.Hands+HandEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - GroupName: PhysicsHands
-    _handPool: {fileID: 0}
-    LeftModel: {fileID: 2146723918}
-    IsLeftToBeSpawned: 0
-    RightModel: {fileID: 480883172}
-    IsRightToBeSpawned: 0
-    IsEnabled: 1
-    CanDuplicate: 1
-    HandPostProcesses:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: Leap.Unity.Hands+HandEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
 --- !u!1 &467544317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,12 +1921,6 @@ MonoBehaviour:
 Transform:
   m_PrefabParentObject: {fileID: 415952, guid: c8515ebee271c0649b9db1321f3026a4, type: 2}
   m_PrefabInternal: {fileID: 1052472910}
---- !u!114 &480883172 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11406422, guid: c8515ebee271c0649b9db1321f3026a4,
-    type: 2}
-  m_PrefabInternal: {fileID: 1052472910}
-  m_Script: {fileID: 11500000, guid: 9ea79be653ce14db8969d7225d95ec6c, type: 3}
 --- !u!1 &509017212
 GameObject:
   m_ObjectHideFlags: 0
@@ -3368,6 +3353,10 @@ Prefab:
     - target: {fileID: 452704, guid: c8515ebee271c0649b9db1321f3026a4, type: 2}
       propertyPath: m_LocalPosition.z
       value: 0.09146038
+      objectReference: {fileID: 0}
+    - target: {fileID: 166188, guid: c8515ebee271c0649b9db1321f3026a4, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8515ebee271c0649b9db1321f3026a4, type: 2}
@@ -4827,9 +4816,3 @@ CanvasRenderer:
 Transform:
   m_PrefabParentObject: {fileID: 475100, guid: 23f2cce114628a448bfeaae171b4c0c0, type: 2}
   m_PrefabInternal: {fileID: 353462390}
---- !u!114 &2146723918 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11422472, guid: 23f2cce114628a448bfeaae171b4c0c0,
-    type: 2}
-  m_PrefabInternal: {fileID: 353462390}
-  m_Script: {fileID: 11500000, guid: 9ea79be653ce14db8969d7225d95ec6c, type: 3}

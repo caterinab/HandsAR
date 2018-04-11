@@ -6,10 +6,10 @@
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
 	}
 	SubShader{
-		Tags{ "RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" }
+		Tags{ "Queue" = "Geometry+1" "IgnoreProjector" = "True" }
 		//Tags{ "Queue" = "Geometry-1" "ForceNoShadowCasting" = "true" "IgnoreProjector" = "true" }  // queue = 1999 
 		LOD 200
-		
+		ZTest Always
 		CGPROGRAM
 		#pragma surface surf Lambert alpha
 

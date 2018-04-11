@@ -13,12 +13,14 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2017.4.0f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -305,6 +307,9 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="InteractionEngineUtility">
+      <HintPath>Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="LeapAR.csproj">
@@ -355,7 +360,19 @@
     <Compile Include="Assets\LeapMotion\Core\Scripts\VR\Editor\EyeTypeEditor.cs" />
     <Compile Include="Assets\LeapMotion\Core\Scripts\VR\Editor\LeapTemporalWarpingEditor.cs" />
     <Compile Include="Assets\LeapMotion\Modules\Hands\Scripts\Editor\LeapHandsAutoRigEditor.cs" />
-    <Compile Include="Assets\Vuforia\Editor\Scripts\OpenSourceInitializer.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Examples\3. Interaction Callbacks\Scripts\Editor\TransformHandleEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Examples\6. Dynamic UI\Scripts\Editor\WorkstationBehaviourEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\ContactBoneParentEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\InteractionBehaviourEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\InteractionControllerEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\InteractionHandEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\InteractionManagerEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Editor\InteractionVRControllerEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Anchors\Editor\AnchorableBehaviourEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Anchors\Editor\AnchorEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Editor\InteractionButtonEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Editor\InteractionSliderEditor.cs" />
+    <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\Editor\InteractionControllerSwitcherEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\DepthMask.shader" />
@@ -375,11 +392,7 @@
     <None Include="Assets\LeapMotion\Core\Resources\VertexOffsetShader.shader" />
     <None Include="Assets\LeapMotion\Core\Version.txt" />
     <None Include="Assets\LeapMotion\Core\readme.txt" />
-    <None Include="Assets\Plugins\Android\AndroidManifest-Cardboard.xml" />
-    <None Include="Assets\Plugins\Android\AndroidManifest-Daydream.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\assets\donotdelete.txt" />
-    <None Include="Assets\Plugins\Android\proguard-gvr.txt" />
     <None Include="Assets\Plugins\iOS\Vuforia.UnityExtensions.iOS.XML" />
     <None Include="Assets\StreamingAssets\Vuforia\FSpinner.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Images.xml" />
@@ -387,17 +400,23 @@
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Object_OT.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_VuMark.xml" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
+    <None Include="Assets\TSF\Shaders\TSF.shader" />
+    <None Include="Assets\TSF\Shaders\TSFOutline.shader" />
+    <None Include="Assets\Vuforia\Editor\WebcamProfiles\profiles.xml" />
     <None Include="Assets\Vuforia\Shaders\BrightTexture.shader" />
-    <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />
+    <None Include="Assets\Vuforia\Shaders\ClippingMask.shader" />
     <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
-    <None Include="Assets\Vuforia\Shaders\DepthContour.shader" />
     <None Include="Assets\Vuforia\Shaders\DepthMask.shader" />
-    <None Include="Assets\Vuforia\Shaders\OutlineOpaque.shader" />
+    <None Include="Assets\Vuforia\Shaders\RenderVideoBackground.shader" />
     <None Include="Assets\Vuforia\Shaders\Text3D.shader" />
     <None Include="Assets\Vuforia\Shaders\VertexLitWithZ.shader" />
+    <None Include="Assets\Vuforia\Shaders\VideoBackground.shader" />
     <None Include="Assets\license_3rdpartynotice.txt" />
     <None Include="Assets\link.xml" />
     <None Include="Assets\readme_SDK.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

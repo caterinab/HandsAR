@@ -18,6 +18,11 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
 
+
+        GameObject UICanvas = GameObject.Find("Canvas");
+        RectTransform rt = UICanvas.GetComponent(typeof(RectTransform)) as RectTransform;
+        rt.sizeDelta = new Vector2(Screen.width, Screen.height);
+
         float quadX = PlayerPrefs.GetFloat("quadX", 0);
         float quadY = PlayerPrefs.GetFloat("quadY", 0);
         GameObject.Find("Quad").transform.localPosition = new Vector2(quadX, quadY);
@@ -33,6 +38,12 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("DirectionalLight").GetComponent<Light>().intensity += delta3;
     }
     */
+
+    public void ResetCube()
+    {
+        GameObject.Find("CustomCube").transform.localPosition = new Vector3(-0.5f, 0.05f, 0.2f);
+    }
+
     public void SaveQuadOffset(float x, float y)
     {
         PlayerPrefs.SetFloat("quadX", x);
