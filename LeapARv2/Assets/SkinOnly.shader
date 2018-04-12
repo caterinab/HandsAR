@@ -6,7 +6,7 @@
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
 	}
 	SubShader{
-		Tags{ "Queue" = "Geometry+1" "IgnoreProjector" = "True" }
+		Tags{ "Queue" = "Geometry" "IgnoreProjector" = "True" }
 		//Tags{ "Queue" = "Geometry-1" "ForceNoShadowCasting" = "true" "IgnoreProjector" = "true" }  // queue = 1999 
 		LOD 200
 		ZTest Always

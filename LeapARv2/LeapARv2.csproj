@@ -227,6 +227,9 @@
     <Reference Include="LeapCSharp.NET3.5">
       <HintPath>Assets/LeapMotion/Core/Plugins/LeapCSharp.NET3.5.dll</HintPath>
     </Reference>
+    <Reference Include="InteractionEngineUtility">
+      <HintPath>Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
+    </Reference>
     <Reference Include="Google.ProtocolBuffers">
       <HintPath>Assets/Plugins/Google.ProtocolBuffers.dll</HintPath>
     </Reference>
@@ -253,9 +256,6 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="InteractionEngineUtility">
-      <HintPath>Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -489,6 +489,7 @@
     <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\InteractionControllerSwitcher.cs" />
     <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\KabschSolver.cs" />
     <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\PhysicsCallbacks.cs" />
+    <Compile Include="Assets\RenderCameraDepth.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Astronaut.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Augmentation.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Drone.cs" />
@@ -518,6 +519,7 @@
     <Compile Include="Assets\Vuforia\Scripts\DefaultTrackableEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ButtonShader.shader" />
     <None Include="Assets\DepthMask.shader" />
     <None Include="Assets\Editor\Vuforia\CylinderTargetTextures\VuforiaMars_Images\authoringinfo.xml" />
     <None Include="Assets\Editor\Vuforia\Emulator\VuforiaEmulator.xml" />
@@ -541,6 +543,7 @@
     <None Include="Assets\Plugins\Android\assets\donotdelete.txt" />
     <None Include="Assets\Plugins\Android\proguard-gvr.txt" />
     <None Include="Assets\Plugins\iOS\Vuforia.UnityExtensions.iOS.XML" />
+    <None Include="Assets\RenderCameraDepth.shader" />
     <None Include="Assets\SamplesResources\Shaders\BlackMask.shader" />
     <None Include="Assets\SamplesResources\Shaders\GroundBlend.shader" />
     <None Include="Assets\SamplesResources\Shaders\OverlayMesh.shader" />

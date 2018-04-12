@@ -17,15 +17,10 @@ public class ButtonManager : MonoBehaviour {
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
-
-
-        GameObject UICanvas = GameObject.Find("Canvas");
-        RectTransform rt = UICanvas.GetComponent(typeof(RectTransform)) as RectTransform;
-        rt.sizeDelta = new Vector2(Screen.width, Screen.height);
-
-        float quadX = PlayerPrefs.GetFloat("quadX", 0);
-        float quadY = PlayerPrefs.GetFloat("quadY", 0);
-        GameObject.Find("Quad").transform.localPosition = new Vector2(quadX, quadY);
+        
+        float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
+        float quadHandY = PlayerPrefs.GetFloat("quadHandY", 0);
+        GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
     }
     /*
     public void LightDown()
@@ -38,65 +33,61 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("DirectionalLight").GetComponent<Light>().intensity += delta3;
     }
     */
-
-    public void ResetCube()
+    
+    public void SaveQuadHandOffset(float x, float y)
     {
-        GameObject.Find("CustomCube").transform.localPosition = new Vector3(-0.5f, 0.05f, 0.2f);
+        PlayerPrefs.SetFloat("quadHandX", x);
+        PlayerPrefs.SetFloat("quadHandY", y);
+        PlayerPrefs.Save();
     }
 
-    public void SaveQuadOffset(float x, float y)
-    {
-        PlayerPrefs.SetFloat("quadX", x);
-        PlayerPrefs.SetFloat("quadY", y);
+    public void ResetQuadHand() {
+        GameObject.Find("QuadHand").transform.localPosition = new Vector3(0, 0, 0);
+        SaveQuadHandOffset(0, 0);
     }
 
-    public void ResetQuad() {
-        GameObject.Find("Quad").transform.localPosition = new Vector2(0, 0);
-        SaveQuadOffset(0, 0);
-    }
-
-    public void QuadUp()
+    public void QuadHandUp()
     {
-        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+        Vector3 p = GameObject.Find("QuadHand").transform.localPosition;
 
         p.y += delta2;
 
-        GameObject.Find("Quad").transform.localPosition = p;
+        GameObject.Find("QuadHand").transform.localPosition = p;
 
-        SaveQuadOffset(p.x, p.y);
+        SaveQuadHandOffset(p.x, p.y);
     }
 
-    public void QuadDown()
+    public void QuadHandDown()
     {
-        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+        Vector3 p = GameObject.Find("QuadHand").transform.localPosition;
 
         p.y -= delta2;
 
-        GameObject.Find("Quad").transform.localPosition = p;
+        GameObject.Find("QuadHand").transform.localPosition = p;
 
-        SaveQuadOffset(p.x, p.y);
+        SaveQuadHandOffset(p.x, p.y);
     }
 
-    public void QuadRight()
+    public void QuadHandRight()
     {
-        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+        Vector3 p = GameObject.Find("QuadHand").transform.localPosition;
 
         p.x += delta2;
 
-        GameObject.Find("Quad").transform.localPosition = p;
+        GameObject.Find("QuadHand").transform.localPosition = p;
 
-        SaveQuadOffset(p.x, p.y);
+        SaveQuadHandOffset(p.x, p.y);
     }
 
-    public void QuadLeft()
+    public void QuadHandLeft()
     {
-        Vector2 p = GameObject.Find("Quad").transform.localPosition;
+        Vector3 p = GameObject.Find("QuadHand").transform.localPosition;
 
         p.x -= delta2;
 
-        GameObject.Find("Quad").transform.localPosition = p;
+        GameObject.Find("QuadHand").transform.localPosition = p;
 
-        SaveQuadOffset(p.x, p.y);
+        SaveQuadHandOffset(p.x, p.y);
     }
 
     public void StartMainScene() {
@@ -120,6 +111,7 @@ public class ButtonManager : MonoBehaviour {
         PlayerPrefs.SetFloat("sensorX", p.x);
         PlayerPrefs.SetFloat("sensorY", p.y);
         PlayerPrefs.SetFloat("sensorZ", p.z);
+        PlayerPrefs.Save();
     }
 
     public void IncrementX() {

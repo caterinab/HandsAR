@@ -13,7 +13,7 @@ public class CameraImageAccess : MonoBehaviour
     #region PRIVATE_MEMBERS
 
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.UNKNOWN_FORMAT;
-
+    
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
     Texture2D tex;
@@ -90,8 +90,6 @@ public class CameraImageAccess : MonoBehaviour
 
                     if (pixels != null && pixels.Length > 0)
                     {
-                        //Debug.Log("\nImage pixels: " + pixels[0] + ", " + pixels[1] + ", " + pixels[2] + ", ...\n");
-                        
                         Debug.Log("\nINPUT: " + (int)pixels[0] + " " + (int)pixels[1] + " " + (int)pixels[2] + " " + (int)pixels[3] + " " + (int)pixels[4] + " ...\n");
                         
                         System.IntPtr unmanagedPointer = Marshal.AllocHGlobal(pixels.Length);
@@ -103,7 +101,7 @@ public class CameraImageAccess : MonoBehaviour
                         
                         tex.LoadRawTextureData(t);
                         tex.Apply();
-                        GameObject.Find("Quad").GetComponent<Renderer>().material.mainTexture = tex;           
+                        GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;           
                     }
                 }
             }
@@ -126,7 +124,7 @@ public class CameraImageAccess : MonoBehaviour
             RegisterFormat();
         }
     }
-
+    
     /// <summary>
     /// Register the camera pixel format
     /// </summary>

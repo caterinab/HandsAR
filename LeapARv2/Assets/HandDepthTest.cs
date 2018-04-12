@@ -21,11 +21,31 @@ public class HandDepthTest : MonoBehaviour
         //if ((palmLPos.z*(-1000) > cubePos.z) || (palmRPos.z*(-1000) > cubePos.z))
         if ((palmLDist > cubeDist) || (palmRDist > cubeDist))
         {
-            quad.GetComponent<Renderer>().material.renderQueue = 1999;
+            if (cube.GetComponent<Renderer>() != null)
+            {
+                cube.GetComponent<Renderer>().material.renderQueue = 2001;
+            }
+            else
+            {
+                foreach (Renderer r in cube.GetComponentsInChildren<Renderer>())
+                {
+                    r.material.renderQueue = 2001;
+                }
+            }
         }
         else
         {
-            quad.GetComponent<Renderer>().material.renderQueue = 2001;
+            if (cube.GetComponent<Renderer>() != null)
+            {
+                cube.GetComponent<Renderer>().material.renderQueue = 1999;
+            }
+            else
+            {
+                foreach (Renderer r in cube.GetComponentsInChildren<Renderer>())
+                {
+                    r.material.renderQueue = 1999;
+                }
+            }
         }
         Debug.Log("palm " + palmLDist + ", cube " + cubeDist);
     }
