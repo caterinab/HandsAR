@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 internal static class OpenCVInterop
 {
     [DllImport("native-lib")]
-    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels);
+    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels, ref System.IntPtr bytes);
 }
 
 public class CameraImageAccess : MonoBehaviour
@@ -13,11 +13,17 @@ public class CameraImageAccess : MonoBehaviour
     #region PRIVATE_MEMBERS
 
     private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.UNKNOWN_FORMAT;
-    
+
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
-    Texture2D tex;
-    //private RawImage rawImage;
+    Texture2D tex, tex2, screenshot;
+    
+    public RenderTexture rt;    
+    public Camera camera;
+
+    // set to phone camera resolution
+    int width = 1280;
+    int height = 720;
 
     #endregion // PRIVATE_MEMBERS
 
@@ -36,9 +42,12 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
         VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
+        
+        tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+        tex2 = new Texture2D(width, height, TextureFormat.RGB24, false);
+        screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
 
-        tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
-        Debug.Log("SCREEN SIZE: " + Screen.width + "x" + Screen.height);
+        camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -71,37 +80,57 @@ public class CameraImageAccess : MonoBehaviour
     /// </summary>
     void OnTrackablesUpdated()
     {
-        if (mFormatRegistered)
+        if (GameObject.Find("QuadHand") != null)
         {
-            if (mAccessCameraImage)
+            if (mFormatRegistered)
             {
-                Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
-                
-                if (image != null)
+                if (mAccessCameraImage)
                 {
+                    Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
+
+                    if (image != null)
+                    {/*
                     Debug.Log(
                         "\nImage Format: " + image.PixelFormat +
                         "\nImage Size:   " + image.Width + "x" + image.Height +
                         "\nBuffer Size:  " + image.BufferWidth + "x" + image.BufferHeight +
                         "\nImage Stride: " + image.Stride + "\n"
-                    );
+                    );*/
 
-                    byte[] pixels = image.Pixels;
+                        byte[] pixels = image.Pixels;
 
-                    if (pixels != null && pixels.Length > 0)
-                    {
-                        Debug.Log("\nINPUT: " + (int)pixels[0] + " " + (int)pixels[1] + " " + (int)pixels[2] + " " + (int)pixels[3] + " " + (int)pixels[4] + " ...\n");
-                        
-                        System.IntPtr unmanagedPointer = Marshal.AllocHGlobal(pixels.Length);
-                        Marshal.Copy(pixels, 0, unmanagedPointer, pixels.Length);
-                        OpenCVInterop.DetectSkin(image.Height, image.Width, ref unmanagedPointer);
-                        byte[] t = new byte[pixels.Length];
-                        Marshal.Copy(unmanagedPointer, t, 0, t.Length);
-                        Marshal.FreeHGlobal(unmanagedPointer);
-                        
-                        tex.LoadRawTextureData(t);
-                        tex.Apply();
-                        GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;           
+                        if (pixels != null && pixels.Length > 0)
+                        {
+                            RenderTexture.active = rt;
+                            screenshot.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+                            screenshot.Apply();
+                            
+                            byte[] bytes = screenshot.GetRawTextureData();
+
+                            if (bytes != null && bytes.Length > 0)
+                            {
+                                System.IntPtr pixelsPtr = Marshal.AllocHGlobal(pixels.Length);
+                                Marshal.Copy(pixels, 0, pixelsPtr, pixels.Length);
+                                System.IntPtr bytesPtr = Marshal.AllocHGlobal(bytes.Length);
+                                Marshal.Copy(bytes, 0, bytesPtr, bytes.Length);
+
+                                OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref bytesPtr);
+                                byte[] t = new byte[pixels.Length];
+                                byte[] u = new byte[bytes.Length];
+
+                                Marshal.Copy(pixelsPtr, t, 0, t.Length);
+                                Marshal.FreeHGlobal(pixelsPtr);
+                                Marshal.Copy(bytesPtr, u, 0, u.Length);
+                                Marshal.FreeHGlobal(bytesPtr);
+                                
+                                tex.LoadRawTextureData(t);
+                                tex.Apply();
+                                GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;
+                                tex2.LoadRawTextureData(u);
+                                tex2.Apply();
+                                GameObject.Find("QuadFingers").GetComponent<Renderer>().material.mainTexture = tex2;
+                            }
+                        }
                     }
                 }
             }
@@ -124,7 +153,7 @@ public class CameraImageAccess : MonoBehaviour
             RegisterFormat();
         }
     }
-    
+
     /// <summary>
     /// Register the camera pixel format
     /// </summary>
@@ -145,11 +174,17 @@ public class CameraImageAccess : MonoBehaviour
     /// <summary>
     /// Unregister the camera pixel format (e.g. call this when app is paused)
     /// </summary>
-    void UnregisterFormat()
+    public void UnregisterFormat()
     {
         Debug.Log("Unregistering camera pixel format " + mPixelFormat.ToString());
         CameraDevice.Instance.SetFrameFormat(mPixelFormat, false);
         mFormatRegistered = false;
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("Camera access script was destroyed");
+        UnregisterFormat();
     }
 
     #endregion //PRIVATE_METHODS

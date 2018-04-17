@@ -1,3 +1,5 @@
+
+
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>
 
@@ -5,7 +7,7 @@ using namespace cv;
 using std::cout;
 using std::vector;
 
-extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
+extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
     Mat3b frame;
     Mat1b output_frame;//, inv;
     //RNG rng(12345);
@@ -88,12 +90,28 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
     //resize(frame, frame, Size(), 2, 2, INTER_LINEAR);
     resize(frame, frame, Size(), 2, 2, INTER_NEAREST);
 
-    std::copy(frame.data, frame.data + h * w * 3, *input_frame);
+    std::copy(frame.data, frame.data + h*w*3, *input_frame);
+
+    Mat mask_image = Mat(h, w, CV_8UC3, *mask);
+    threshold(mask_image, mask_image, 200, 255, THRESH_BINARY);
+
+    bitwise_and(mask_image, frame, mask_image);
+
+    std::copy(mask_image.data, mask_image.data + h * w * 3, *mask);
 }
 
-int main()
-{
-/*
+int main() {/*
+    Mat img = imread(
+            "C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hand.jpg");
+    Mat msk = imread(
+            "C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\monkey.png");
+    DetectSkin(msk.rows, msk.cols, &img.data, &msk.data);
+    imshow("", img);
+    waitKey(0);
+    imshow("", msk);
+    waitKey(0);
+*/
+    /*
     VideoCapture c("sample.mp4");
     Mat frame;
     clock_t begin;

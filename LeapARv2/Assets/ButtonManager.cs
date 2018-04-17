@@ -17,10 +17,14 @@ public class ButtonManager : MonoBehaviour {
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
-        
-        float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
-        float quadHandY = PlayerPrefs.GetFloat("quadHandY", 0);
-        GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
+
+        if (GameObject.Find("QuadHand") != null)
+        {
+            float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
+            float quadHandY = PlayerPrefs.GetFloat("quadHandY", 0);
+            GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
+            GameObject.Find("QuadFingers").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
+        }
     }
     /*
     public void LightDown()
@@ -33,6 +37,26 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("DirectionalLight").GetComponent<Light>().intensity += delta3;
     }
     */
+
+    public void CamIn() {
+        Vector3 p = GameObject.Find("Camera").transform.localPosition;
+
+        p.z += delta;
+
+        GameObject.Find("Camera").transform.localPosition = p;
+        PlayerPrefs.SetFloat("camZ", p.z);
+        PlayerPrefs.Save();
+    }
+
+    public void CamOut() {
+        Vector3 p = GameObject.Find("Camera").transform.localPosition;
+
+        p.z -= delta;
+
+        GameObject.Find("Camera").transform.localPosition = p;
+        PlayerPrefs.SetFloat("camZ", p.z);
+        PlayerPrefs.Save();
+    }
     
     public void SaveQuadHandOffset(float x, float y)
     {
@@ -53,6 +77,7 @@ public class ButtonManager : MonoBehaviour {
         p.y += delta2;
 
         GameObject.Find("QuadHand").transform.localPosition = p;
+        GameObject.Find("QuadFingers").transform.localPosition = p;
 
         SaveQuadHandOffset(p.x, p.y);
     }
@@ -64,6 +89,7 @@ public class ButtonManager : MonoBehaviour {
         p.y -= delta2;
 
         GameObject.Find("QuadHand").transform.localPosition = p;
+        GameObject.Find("QuadFingers").transform.localPosition = p;
 
         SaveQuadHandOffset(p.x, p.y);
     }
@@ -75,6 +101,7 @@ public class ButtonManager : MonoBehaviour {
         p.x += delta2;
 
         GameObject.Find("QuadHand").transform.localPosition = p;
+        GameObject.Find("QuadFingers").transform.localPosition = p;
 
         SaveQuadHandOffset(p.x, p.y);
     }
@@ -86,6 +113,7 @@ public class ButtonManager : MonoBehaviour {
         p.x -= delta2;
 
         GameObject.Find("QuadHand").transform.localPosition = p;
+        GameObject.Find("QuadFingers").transform.localPosition = p;
 
         SaveQuadHandOffset(p.x, p.y);
     }
