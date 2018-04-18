@@ -92,8 +92,10 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 
     std::copy(frame.data, frame.data + h*w*3, *input_frame);
 
-    Mat mask_image = Mat(h, w, CV_8UC3, *mask);
-    threshold(mask_image, mask_image, 200, 255, THRESH_BINARY);
+    Mat in_mask = Mat(h, w, CV_8UC3, *mask);
+    Mat mask_image;
+    flip(in_mask, mask_image, 0);
+    threshold(mask_image, mask_image, 254, 255, THRESH_BINARY);
 
     bitwise_and(mask_image, frame, mask_image);
 

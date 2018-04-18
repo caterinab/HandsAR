@@ -5,10 +5,10 @@ using namespace cv;
 using std::cout;
 using std::vector;
 
-extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
+extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 	Mat3b frame;
 	Mat1b output_frame;//, inv;
-	//RNG rng(12345);
+					   //RNG rng(12345);
 
 	frame = Mat(h, w, CV_8UC3, *input_frame);
 	resize(frame, frame, Size(), 0.5, 0.5, INTER_AREA);
@@ -89,30 +89,48 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame) {
 	resize(frame, frame, Size(), 2, 2, INTER_NEAREST);
 
 	std::copy(frame.data, frame.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
+
+	Mat in_mask = Mat(h, w, CV_8UC3, *mask);
+	Mat mask_image;
+	flip(in_mask, mask_image, 0);
+	threshold(mask_image, mask_image, 254, 255, THRESH_BINARY);
+
+	bitwise_and(mask_image, frame, mask_image);
+
+	std::copy(mask_image.data, mask_image.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*mask, h*w * 3));
 }
 
-int main()
-{
+int main() {
+			Mat img = imread(
+			"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hand.jpg");
+			Mat msk = imread(
+			"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\grad.jpg");
+			DetectSkin(msk.rows, msk.cols, &img.data, &msk.data);
+			imshow("", img);
+			waitKey(0);
+			imshow("", msk);
+			waitKey(0);
+			
+			/*
+			VideoCapture c("sample.mp4");
+			Mat frame;
+			clock_t begin;
+			while (true) {
+			c >> frame;
+			begin = clock();
+			uchar** p = &frame.data;
+			DetectSkin(frame.rows, frame.cols, p);
+			clock_t end = clock();
+			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+			cout << 1 / elapsed_secs << " fps\n";
+			imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
+			waitKey(1);
 
-	VideoCapture c("sample.mp4");
-	Mat frame;
-	clock_t begin;
-	while (true) {
-		c >> frame;
-		begin = clock();
-		uchar** p = &frame.data;
-		DetectSkin(frame.rows, frame.cols, p);
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		cout << 1 / elapsed_secs << " fps\n";
-		imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
-		waitKey(1);
-		/*
-		for (int i = 0; i < frame.rows*frame.cols; i++)
-		{
-		cout << (int)frame.data[i] << " ";
-		}
-		*/
-	}
+			for (int i = 0; i < frame.rows*frame.cols; i++)
+			{
+			cout << (int)frame.data[i] << " ";
+			}
 
+			}
+			*/
 }

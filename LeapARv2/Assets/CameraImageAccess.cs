@@ -18,8 +18,7 @@ public class CameraImageAccess : MonoBehaviour
     private bool mFormatRegistered = false;
     Texture2D tex, tex2, screenshot;
     
-    public RenderTexture rt;    
-    public Camera camera;
+    public RenderTexture rt;
 
     // set to phone camera resolution
     int width = 1280;
@@ -47,7 +46,7 @@ public class CameraImageAccess : MonoBehaviour
         tex2 = new Texture2D(width, height, TextureFormat.RGB24, false);
         screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
 
-        camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
+        //camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -80,7 +79,7 @@ public class CameraImageAccess : MonoBehaviour
     /// </summary>
     void OnTrackablesUpdated()
     {
-        if (GameObject.Find("QuadHand") != null)
+        if (GameObject.Find("Quad+1") != null)
         {
             if (mFormatRegistered)
             {
@@ -123,12 +122,12 @@ public class CameraImageAccess : MonoBehaviour
                                 Marshal.Copy(bytesPtr, u, 0, u.Length);
                                 Marshal.FreeHGlobal(bytesPtr);
                                 
-                                tex.LoadRawTextureData(t);
-                                tex.Apply();
-                                GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;
+                                //tex.LoadRawTextureData(t);
+                                //tex.Apply();
+                                //GameObject.Find("QuadBase").GetComponent<Renderer>().material.mainTexture = tex;
                                 tex2.LoadRawTextureData(u);
                                 tex2.Apply();
-                                GameObject.Find("QuadFingers").GetComponent<Renderer>().material.mainTexture = tex2;
+                                GameObject.Find("Quad+1").GetComponent<Renderer>().material.mainTexture = tex2;
                             }
                         }
                     }

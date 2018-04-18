@@ -18,13 +18,16 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
 
-        if (GameObject.Find("QuadHand") != null)
+        if (GameObject.Find("Quad+1") != null)
         {
             float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
             float quadHandY = PlayerPrefs.GetFloat("quadHandY", 0);
-            GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
-            GameObject.Find("QuadFingers").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
+            //GameObject.Find("QuadBase").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
+            GameObject.Find("Quad+1").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
         }
+
+        float camZ = PlayerPrefs.GetFloat("camZ", 0);
+        GameObject.Find("Camera").transform.localPosition = new Vector3(0, 0, camZ);
     }
     /*
     public void LightDown()
