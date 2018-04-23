@@ -16,13 +16,16 @@ public class CameraImageAccess : MonoBehaviour
 
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
-    Texture2D tex, tex2, screenshot;
+    Texture2D tex, screenshot;
     
     public RenderTexture rt;
 
     // set to phone camera resolution
     int width = 1280;
     int height = 720;
+
+    bool init = true;
+    Camera cam, ar;
 
     #endregion // PRIVATE_MEMBERS
 
@@ -41,12 +44,12 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
         VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
-        
+                
         tex = new Texture2D(width, height, TextureFormat.RGB24, false);
-        tex2 = new Texture2D(width, height, TextureFormat.RGB24, false);
         screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
-
-        //camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
+        
+        cam = GameObject.Find("Camera").GetComponent<Camera>();
+        ar = GameObject.Find("ARCamera").GetComponent<Camera>();
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -71,7 +74,6 @@ public class CameraImageAccess : MonoBehaviour
 
             mFormatRegistered = false;
         }
-
     }
 
     /// <summary>
@@ -79,7 +81,18 @@ public class CameraImageAccess : MonoBehaviour
     /// </summary>
     void OnTrackablesUpdated()
     {
-        if (GameObject.Find("Quad+1") != null)
+        if (init)
+        {
+            float fov = ar.fieldOfView;
+            cam.fieldOfView = fov;
+
+            float camY = PlayerPrefs.GetFloat("camY", 0);
+            GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
+
+            init = false;
+        }
+        
+        if (GameObject.Find("CanvasHand") != null)
         {
             if (mFormatRegistered)
             {
@@ -114,20 +127,15 @@ public class CameraImageAccess : MonoBehaviour
                                 Marshal.Copy(bytes, 0, bytesPtr, bytes.Length);
 
                                 OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref bytesPtr);
-                                byte[] t = new byte[pixels.Length];
                                 byte[] u = new byte[bytes.Length];
-
-                                Marshal.Copy(pixelsPtr, t, 0, t.Length);
+                                
                                 Marshal.FreeHGlobal(pixelsPtr);
                                 Marshal.Copy(bytesPtr, u, 0, u.Length);
                                 Marshal.FreeHGlobal(bytesPtr);
                                 
-                                //tex.LoadRawTextureData(t);
-                                //tex.Apply();
-                                //GameObject.Find("QuadBase").GetComponent<Renderer>().material.mainTexture = tex;
-                                tex2.LoadRawTextureData(u);
-                                tex2.Apply();
-                                GameObject.Find("Quad+1").GetComponent<Renderer>().material.mainTexture = tex2;
+                                tex.LoadRawTextureData(u);
+                                tex.Apply();
+                                GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;
                             }
                         }
                     }

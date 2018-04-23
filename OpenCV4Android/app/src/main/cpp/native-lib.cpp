@@ -1,11 +1,9 @@
-
-
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
-using std::cout;
-using std::vector;
+//using std::cout;
+//using std::vector;
 
 extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
     Mat3b frame;
@@ -13,7 +11,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
     //RNG rng(12345);
 
     frame = Mat(h, w, CV_8UC3, *input_frame);
-    resize(frame, frame, Size(), 0.5, 0.5, INTER_AREA);
+    resize(frame, frame, Size(), 0.5, 0.5, INTER_LINEAR);
 
     //cvtColor(frame, output_frame, CV_BGR2GRAY);
     cvtColor(frame, frame, CV_RGB2HSV);
@@ -90,7 +88,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
     //resize(frame, frame, Size(), 2, 2, INTER_LINEAR);
     resize(frame, frame, Size(), 2, 2, INTER_NEAREST);
 
-    std::copy(frame.data, frame.data + h*w*3, *input_frame);
+    //std::copy(frame.data, frame.data + h*w*3, *input_frame);
 
     Mat in_mask = Mat(h, w, CV_8UC3, *mask);
     Mat mask_image;

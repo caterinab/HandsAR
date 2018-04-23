@@ -1,3 +1,93 @@
+/*
+using System;
+using Leap;
+using WebSocketSharp;
+using WebSocketSharp.Server;
+
+namespace LeapServer
+{
+    public class Laputa : WebSocketBehavior
+    {
+        protected override void OnMessage(MessageEventArgs e)
+        {
+            Console.WriteLine("Client says: " + e.Data);
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+            base.OnClose(e);
+            Console.WriteLine("Client disconnesso");
+        }
+
+        protected override void OnError(ErrorEventArgs e)
+        {
+            base.OnError(e);
+            Console.WriteLine("Error: " + e.Message);
+        }
+    }
+
+    class Program
+    {
+        static Controller controller;
+        static Frame frame;
+        static WebSocketServer wssv;
+        //static int contatore = 0;
+
+        static void Main(string[] args)
+        {
+            wssv = new WebSocketServer(System.Net.IPAddress.Any, 6438);
+
+            wssv.AddWebSocketService<Laputa>("/");
+            wssv.Start();
+            Console.WriteLine("Avviato server.");
+            Console.ReadKey(true);
+
+            controller = new Controller();
+            controller.FrameReady += NewFrameHandler;
+            controller.Connect += OnControllerConnected;
+            
+            frame = new Frame();
+        }
+        
+        private static void OnMessageHandler(object sender, MessageEventArgs e)
+        {
+            ++contatore;
+            contatore %= 6;
+            if (contatore == 0)
+            {
+
+                if (wssv.IsListening)
+                {
+
+                    wssv.WebSocketServices.Broadcast(e.Data);
+                    //wssv.WebSocketServices.Broadcast(twoHands);
+                    //Console.WriteLine(e.Data);
+                }
+            }
+        }
+        
+              
+        static void NewFrameHandler(object sender, FrameEventArgs eventArgs)
+        {
+            frame = eventArgs.frame;
+            Console.WriteLine(frame);
+
+            if (wssv.IsListening)
+            {
+                wssv.WebSocketServices.Broadcast(frame.Serialize);
+            }
+        }
+
+        static void OnControllerConnected(object sender, ConnectionEventArgs eventArgs) {
+            if (controller.IsConnected)
+            {
+                Console.WriteLine("Controller connected.");
+            }
+        }
+    }
+}
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +159,7 @@ namespace WebsocketServer
         private static void OnMessageHandler(object sender, MessageEventArgs e)
         {
             ++contatore;
-            contatore %= 7;
+            contatore %= 6;
             if (contatore == 0)
             {
 
@@ -100,3 +190,4 @@ namespace WebsocketServer
         }
     }
 }
+

@@ -3,7 +3,7 @@
 
 using namespace cv;
 using std::cout;
-using std::vector;
+//using std::vector;
 
 extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 	Mat3b frame;
@@ -11,10 +11,10 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 					   //RNG rng(12345);
 
 	frame = Mat(h, w, CV_8UC3, *input_frame);
-	resize(frame, frame, Size(), 0.5, 0.5, INTER_AREA);
+	resize(frame, frame, Size(), 0.5, 0.5, INTER_LINEAR);
 
 	//cvtColor(frame, output_frame, CV_BGR2GRAY);
-	cvtColor(frame, frame, CV_BGR2HSV);
+	cvtColor(frame, frame, CV_RGB2HSV);
 	//cvtColor(bgr_frame, frame, CV_BGR2YCrCb);
 	//GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
@@ -79,7 +79,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 	// apply mask to original image
 	bitwise_and(frame, out, frame);
 
-	cvtColor(frame, frame, CV_HSV2BGR);
+	cvtColor(frame, frame, CV_HSV2RGB);
 
 	//morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion
 	//morphologyEx(output_frame, output_frame, CV_MOP_OPEN, Mat1b(7, 7, 1), Point(-1, -1), 1);	// erosion + dilatation
@@ -88,49 +88,48 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** mask) {
 	//resize(frame, frame, Size(), 2, 2, INTER_LINEAR);
 	resize(frame, frame, Size(), 2, 2, INTER_NEAREST);
 
-	std::copy(frame.data, frame.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
-
+	//std::copy(frame.data, frame.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
+	
 	Mat in_mask = Mat(h, w, CV_8UC3, *mask);
 	Mat mask_image;
 	flip(in_mask, mask_image, 0);
 	threshold(mask_image, mask_image, 254, 255, THRESH_BINARY);
-
+	
 	bitwise_and(mask_image, frame, mask_image);
 
 	std::copy(mask_image.data, mask_image.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*mask, h*w * 3));
 }
 
-int main() {
+int main() {/*
 			Mat img = imread(
 			"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hand.jpg");
 			Mat msk = imread(
-			"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\grad.jpg");
+			"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\ex.png");
 			DetectSkin(msk.rows, msk.cols, &img.data, &msk.data);
 			imshow("", img);
 			waitKey(0);
 			imshow("", msk);
 			waitKey(0);
-			
-			/*
+			*/
 			VideoCapture c("sample.mp4");
+			Mat msk = imread(
+				"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\bg.jpg");
 			Mat frame;
 			clock_t begin;
 			while (true) {
-			c >> frame;
-			begin = clock();
-			uchar** p = &frame.data;
-			DetectSkin(frame.rows, frame.cols, p);
-			clock_t end = clock();
-			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			cout << 1 / elapsed_secs << " fps\n";
-			imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
-			waitKey(1);
-
+				c >> frame;
+				begin = clock();
+				uchar** p = &frame.data;
+				DetectSkin(frame.rows, frame.cols, p, &msk.data);
+				clock_t end = clock();
+				double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+				cout << 1 / elapsed_secs << " fps\n";
+				imshow("", Mat(msk.rows, msk.cols, CV_8UC3, msk.data));
+				waitKey(1);
+			/*
 			for (int i = 0; i < frame.rows*frame.cols; i++)
 			{
-			cout << (int)frame.data[i] << " ";
+				cout << (int)frame.data[i] << " ";
+			}*/
 			}
-
-			}
-			*/
 }
