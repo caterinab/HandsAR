@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 internal static class OpenCVInterop
 {
     [DllImport("native-lib")]
-    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels, ref System.IntPtr bytes);
+    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels, ref System.IntPtr hands, ref System.IntPtr cubes);
 }
 
 public class CameraImageAccess : MonoBehaviour
@@ -16,14 +16,16 @@ public class CameraImageAccess : MonoBehaviour
 
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
-    Texture2D tex, tex2, screenshot;
+    Texture2D tex, screenshot;
     
-    public RenderTexture rt;    
-    public Camera camera;
+    public RenderTexture rtHands, rtCubes;
 
     // set to phone camera resolution
     int width = 1280;
     int height = 720;
+
+    bool init = true;
+    Camera cam, ar;
 
     #endregion // PRIVATE_MEMBERS
 
@@ -44,10 +46,10 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
         
         tex = new Texture2D(width, height, TextureFormat.RGB24, false);
-        tex2 = new Texture2D(width, height, TextureFormat.RGB24, false);
         screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
 
-        camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
+        cam = GameObject.Find("Camera").GetComponent<Camera>();
+        ar = GameObject.Find("ARCamera").GetComponent<Camera>();
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -80,6 +82,17 @@ public class CameraImageAccess : MonoBehaviour
     /// </summary>
     void OnTrackablesUpdated()
     {
+        if (init)
+        {
+            float fov = ar.fieldOfView;
+            cam.fieldOfView = fov;
+
+            float camY = PlayerPrefs.GetFloat("camY", 0);
+            GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
+
+            init = false;
+        }
+
         if (GameObject.Find("QuadHand") != null)
         {
             if (mFormatRegistered)
@@ -99,36 +112,40 @@ public class CameraImageAccess : MonoBehaviour
 
                         byte[] pixels = image.Pixels;
 
-                        if (pixels != null && pixels.Length > 0)
+                        if (pixels.Length > 0)
                         {
-                            RenderTexture.active = rt;
-                            screenshot.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+                            RenderTexture.active = rtHands;
+                            screenshot.ReadPixels(new Rect(0, 0, rtHands.width, rtHands.height), 0, 0);
                             screenshot.Apply();
                             
-                            byte[] bytes = screenshot.GetRawTextureData();
+                            byte[] hands = screenshot.GetRawTextureData();
 
-                            if (bytes != null && bytes.Length > 0)
+                            RenderTexture.active = rtCubes;
+                            screenshot.ReadPixels(new Rect(0, 0, rtCubes.width, rtCubes.height), 0, 0);
+                            screenshot.Apply();
+
+                            byte[] cubes = screenshot.GetRawTextureData();
+
+                            if (hands.Length > 0 && cubes.Length > 0)
                             {
                                 System.IntPtr pixelsPtr = Marshal.AllocHGlobal(pixels.Length);
                                 Marshal.Copy(pixels, 0, pixelsPtr, pixels.Length);
-                                System.IntPtr bytesPtr = Marshal.AllocHGlobal(bytes.Length);
-                                Marshal.Copy(bytes, 0, bytesPtr, bytes.Length);
+                                System.IntPtr handsPtr = Marshal.AllocHGlobal(hands.Length);
+                                Marshal.Copy(hands, 0, handsPtr, hands.Length);
+                                System.IntPtr cubesPtr = Marshal.AllocHGlobal(cubes.Length);
+                                Marshal.Copy(cubes, 0, cubesPtr, cubes.Length);
 
-                                OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref bytesPtr);
+                                OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref handsPtr, ref cubesPtr);
                                 byte[] t = new byte[pixels.Length];
-                                byte[] u = new byte[bytes.Length];
 
                                 Marshal.Copy(pixelsPtr, t, 0, t.Length);
                                 Marshal.FreeHGlobal(pixelsPtr);
-                                Marshal.Copy(bytesPtr, u, 0, u.Length);
-                                Marshal.FreeHGlobal(bytesPtr);
-                                
+                                Marshal.FreeHGlobal(handsPtr);
+                                Marshal.FreeHGlobal(cubesPtr);
+
                                 tex.LoadRawTextureData(t);
                                 tex.Apply();
                                 GameObject.Find("QuadHand").GetComponent<Renderer>().material.mainTexture = tex;
-                                tex2.LoadRawTextureData(u);
-                                tex2.Apply();
-                                GameObject.Find("QuadFingers").GetComponent<Renderer>().material.mainTexture = tex2;
                             }
                         }
                     }
