@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <opencv2/opencv.hpp>
+#include "distanceTransform.h"
 
 using namespace cv;
 using std::cout;
@@ -7,115 +8,148 @@ using std::cin;
 using std::vector;
 
 extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes) {
-	Mat3b frame;
+	Mat3b skin;
 	Mat1b output_frame;
 
-	frame = Mat(h, w, CV_8UC3, *input_frame);
-	resize(frame, frame, Size(), 0.5, 0.5, INTER_LINEAR);
+	skin = Mat(h, w, CV_8UC3, *input_frame);
+	resize(skin, skin, Size(), 0.5, 0.5, INTER_LINEAR);
 
 	//cvtColor(frame, output_frame, CV_BGR2GRAY);
-	cvtColor(frame, frame, CV_BGR2HSV);
+	cvtColor(skin, skin, CV_BGR2HSV);
 	//cvtColor(bgr_frame, frame, CV_BGR2YCrCb);
 	//GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
 	// generate binary mask
 	Scalar hsv_l(0, 38, 51);
 	Scalar hsv_h(17, 250, 242);
-	inRange(frame, hsv_l, hsv_h, output_frame);
+	inRange(skin, hsv_l, hsv_h, output_frame);
 
 	// convert to 3 channel image
 
-	Mat out;
+	Mat skinBin;
 	Mat in[] = { output_frame, output_frame, output_frame };
-	merge(in, 3, out);
-
+	merge(in, 3, skinBin);
+	
 	// apply mask to original image
-	bitwise_and(frame, out, frame);
+	bitwise_and(skin, skinBin, skin);
 
-	cvtColor(frame, frame, CV_HSV2BGR);
+	cvtColor(skin, skin, CV_HSV2BGR);
 
 	//morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion
 	//morphologyEx(output_frame, output_frame, CV_MOP_OPEN, Mat1b(7, 7, 1), Point(-1, -1), 1);	// erosion + dilatation
 	//morphologyEx(output_frame, output_frame, CV_MOP_CLOSE, Mat1b(9, 9, 1), Point(-1, -1), 1);	// dilatation + erosion
 
 	//resize(frame, frame, Size(), 2, 2, INTER_LINEAR);
-	resize(frame, frame, Size(), 2, 2, INTER_NEAREST);
-
+	resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
+	resize(output_frame, output_frame, Size(), 2, 2, INTER_NEAREST);
+	
 	Mat handsMt = Mat(h, w, CV_8UC3, *hands);
-	Mat channels[3];
+	Mat depthChannels[3];
 	
-	split(handsMt, channels);
+	split(handsMt, depthChannels);
 
-	threshold(channels[0], channels[0], 2, 255, THRESH_BINARY_INV);
-	imshow("", channels[0]);
-	waitKey(0);
+	threshold(depthChannels[0], depthChannels[0], 2, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
 
-	Mat labels = Mat(h, w, CV_32SC1);
+	double* dt = new double[h*w];
+	uchar* path = new uchar[h*w];
 	
-	distanceTransform(channels[0], channels[1], labels, DIST_L2, DIST_MASK_PRECISE, DIST_LABEL_PIXEL);
+	double* d = new double[h*w];
 
-	// restringere la ricerca a solo pixel mano
-
-	double min, max;
-	minMaxLoc(labels, &min, &max);
-	//labels.convertTo(labels, CV_8UC1, 255.0 / max, 0);
-	cout << "max " << max << "\n";
-
-	Mat mask = Mat(h, w, CV_8UC1);
-	
-
-	vector<Vec2i> label_to_index;
-	
-	for (int row = 0; row < channels[0].rows; row++)
+	for (int i = 0, k = 0; i < h; i++)
 	{
-		for (int col = 0; col < channels[0].cols; col++)
+		const uchar* m = depthChannels[0].ptr<uchar>(i);
+
+		for (int j = 0; j < w; j++, k++)
 		{
-			if (channels[0].at<uchar>(row, col) == 0)
+			if (m[j] == 0) 
 			{
-				label_to_index.push_back(Vec2i(row, col));
+				d[k] = 0.0;
+			}
+			else
+			{
+				d[k] = 1.0e20;
 			}
 		}
 	}
-	label_to_index.push_back(0);
 
-	cout << "size " << label_to_index.size() << "\n";
+	DistanceTransform2D_NormL1Ret(d, depthChannels[0].rows, depthChannels[0].cols, dt, path);
+	
+	Mat outputDepth = Mat(h, w, CV_8UC1, cvScalar(0));
 
-	for (int i = 0; i < mask.rows; i++)
+	//output_frame = Mat(h, w, CV_8UC1, Scalar(1));
+
+	for (int i = 0, k = 0; i < h; i++)
 	{
-		const double* m = mask.ptr<double>(i);
+		const uchar* s = output_frame.ptr<uchar>(i);
+		uchar* o = outputDepth.ptr<uchar>(i);
 
-		for (int j = 0; j < mask.cols; j++)
+		for (int j = 0; j < w; j++, k++)
 		{
-			mask.at<uchar>(i, j) = channels[2].at<uchar>(label_to_index.at(labels.at<int>(i, j)));
+			if (s[j] > 0) 
+			{	
+				int code;
+				int dim, index;
+				int r0 = i, c0 = j;
+				bool moved = false;
+
+				while ((code = path[r0*w+c0]) != 0)
+				{
+					moved = true;
+					DT_code2index(code, &dim, &index);
+					if (dim == 2)
+						r0 += index;
+					if (dim == 1)
+						c0 += index;
+				}
+
+				const uchar* d = depthChannels[1].ptr<uchar>(r0);
+				o[j] = d[c0];
+			}
 		}
 	}
-
-	imshow("", mask);
-	waitKey(0);
-
-	Mat singles[] = { mask, mask, mask };
-	merge(singles, 3, out);
+	
+	Mat tmp[] = { outputDepth, outputDepth, outputDepth };
+	merge(tmp, 3, outputDepth);
 	
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 		
 	// compare hands depth with objects depth
-	Mat dst = out >= cubesMt;
+	Mat visibileOutput = outputDepth > cubesMt;
+
+	bitwise_and(skin, visibileOutput, skin);
+	flip(skin, skin, 0);
 	/*
-	imshow("", dst);
+	imshow("hands", outputDepth);
+	imshow("cubes", cubesMt);
+	imshow("output", visibileOutput);
+	imshow("skin", skin);
 	waitKey(0);
 	*/
-	bitwise_and(frame, dst, frame);
-	//flip(frame, frame, 0);
+	
+	std::copy(skin.data, skin.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
 
-	std::copy(frame.data, frame.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
+	delete[] dt, path, d;
 }
 
 int main()
-{
+{/*
+	double d[] = { 0.0, 1.0, 1.0, 1.0, 0.0 };
+	double dt[5];
+	uchar p[5];
+
+	DistanceTransform2D_NormL1Ret(d, 1, 5, dt, p);
+
+	for (int i = 0; i < 4; i++)
+	{
+		cout << dt[i] << " " << (int)p[i] << "\n";
+	}
+	*/
 	Mat img = imread(
 		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\b.jpg");
 	Mat img2 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\b.jpg");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\a.jpg");
+	Mat hands = imread(
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands.jpg");
 
 	VideoCapture c("sample.mp4");
 	Mat frame;
@@ -123,14 +157,14 @@ int main()
 	while (true) {
 		c >> frame;
 		begin = clock();
-		DetectSkin(frame.rows, frame.cols, &frame.data, &img.data, &img2.data);
+		DetectSkin(hands.rows, hands.cols, &hands.data, &img.data, &img2.data);
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 		cout << 1 / elapsed_secs << " fps\n";
-
+		/*
 		imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
 		waitKey(1);
-
+		*/
 		/*
 		for (int i = 0; i < frame.rows*frame.cols; i++)
 		{

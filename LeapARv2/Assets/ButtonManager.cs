@@ -27,6 +27,7 @@ public class ButtonManager : MonoBehaviour {
 
         float camY = PlayerPrefs.GetFloat("camY", 0);
         GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
+        GameObject.Find("CameraObj").transform.localPosition = new Vector3(0, camY, 0);
     }
     /*
     public void LightDown()
@@ -47,6 +48,7 @@ public class ButtonManager : MonoBehaviour {
         p.y += delta;
 
         GameObject.Find("Camera").transform.localPosition = p;
+        GameObject.Find("CameraObj").transform.localPosition = p;
         PlayerPrefs.SetFloat("camY", p.y);
         PlayerPrefs.Save();
 
@@ -60,6 +62,7 @@ public class ButtonManager : MonoBehaviour {
         p.y -= delta;
 
         GameObject.Find("Camera").transform.localPosition = p;
+        GameObject.Find("CameraObj").transform.localPosition = p;
         PlayerPrefs.SetFloat("camY", p.y);
         PlayerPrefs.Save();
 

@@ -25,7 +25,7 @@ public class CameraImageAccess : MonoBehaviour
     int height = 720;
 
     bool init = true;
-    Camera cam, ar;
+    Camera cam1, cam2, ar;
 
     #endregion // PRIVATE_MEMBERS
 
@@ -48,7 +48,8 @@ public class CameraImageAccess : MonoBehaviour
         tex = new Texture2D(width, height, TextureFormat.RGB24, false);
         screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
 
-        cam = GameObject.Find("Camera").GetComponent<Camera>();
+        cam1 = GameObject.Find("Camera").GetComponent<Camera>();
+        cam2 = GameObject.Find("CameraObj").GetComponent<Camera>();
         ar = GameObject.Find("ARCamera").GetComponent<Camera>();
     }
 
@@ -85,10 +86,12 @@ public class CameraImageAccess : MonoBehaviour
         if (init)
         {
             float fov = ar.fieldOfView;
-            cam.fieldOfView = fov;
+            cam1.fieldOfView = fov;
+            cam2.fieldOfView = fov;
 
             float camY = PlayerPrefs.GetFloat("camY", 0);
             GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
+            GameObject.Find("CameraObj").transform.localPosition = new Vector3(0, camY, 0);
 
             init = false;
         }
