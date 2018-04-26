@@ -95,6 +95,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	skin = Mat(h, w, CV_8UC3, *input_frame);
 	resize(skin, skin, Size(), 0.5, 0.5, INTER_LINEAR);
+    flip(skin, skin, 0);
 
 	//cvtColor(frame, output_frame, CV_BGR2GRAY);
 	cvtColor(skin, skin, CV_RGB2HSV);
@@ -131,6 +132,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	split(handsMt, depthChannels);
 
 	threshold(depthChannels[0], depthChannels[0], 2, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
+    morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 3);
 
 	double* dt = new double[h*w];
 	uchar* path = new uchar[h*w];
@@ -199,7 +201,6 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	Mat visibileOutput = outputDepth > cubesMt;
 
 	bitwise_and(skin, visibileOutput, skin);
-	flip(skin, skin, 0);
 	/*
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);
@@ -210,11 +211,13 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	std::copy(skin.data, skin.data + h * w * 3, *input_frame);
 
-    delete[] dt, path, d;
+    delete[] dt;
+	delete[] path;
+	delete[] d;
 }
-
+/*
 int main()
-{/*
+{
 	double d[] = { 0.0, 1.0, 1.0, 1.0, 0.0 };
 	double dt[5];
 	uchar p[5];
@@ -225,7 +228,8 @@ int main()
 	{
 		cout << dt[i] << " " << (int)p[i] << "\n";
 	}
-	*/
+
+
 	Mat img = imread(
 		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\b.jpg");
 	Mat img2 = imread(
@@ -243,15 +247,16 @@ int main()
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 		cout << 1 / elapsed_secs << " fps\n";
-		/*
+
 		imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
 		waitKey(1);
-		*/
-		/*
+
+
 		for (int i = 0; i < frame.rows*frame.cols; i++)
 		{
 		cout << (int)frame.data[i] << " ";
 		}
-		*/
+
 	}
 }
+*/
