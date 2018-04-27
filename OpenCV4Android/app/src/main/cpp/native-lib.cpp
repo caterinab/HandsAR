@@ -95,7 +95,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	skin = Mat(h, w, CV_8UC3, *input_frame);
 	resize(skin, skin, Size(), 0.5, 0.5, INTER_LINEAR);
-    flip(skin, skin, 0);
+	flip(skin, skin, 0);
 
 	//cvtColor(frame, output_frame, CV_BGR2GRAY);
 	cvtColor(skin, skin, CV_RGB2HSV);
@@ -107,17 +107,6 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	Scalar hsv_h(17, 250, 242);
 	inRange(skin, hsv_l, hsv_h, output_frame);
 
-	// convert to 3 channel image
-
-	Mat skinBin;
-	Mat in[] = { output_frame, output_frame, output_frame };
-	merge(in, 3, skinBin);
-
-	// apply mask to original image
-	bitwise_and(skin, skinBin, skin);
-
-	cvtColor(skin, skin, CV_HSV2RGB);
-
 	//morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion
 	//morphologyEx(output_frame, output_frame, CV_MOP_OPEN, Mat1b(7, 7, 1), Point(-1, -1), 1);	// erosion + dilatation
 	//morphologyEx(output_frame, output_frame, CV_MOP_CLOSE, Mat1b(9, 9, 1), Point(-1, -1), 1);	// dilatation + erosion
@@ -127,12 +116,13 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	resize(output_frame, output_frame, Size(), 2, 2, INTER_NEAREST);
 
 	Mat handsMt = Mat(h, w, CV_8UC3, *hands);
+
 	Mat depthChannels[3];
 
 	split(handsMt, depthChannels);
 
 	threshold(depthChannels[0], depthChannels[0], 2, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
-    morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 3);
+	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 3);
 
 	double* dt = new double[h*w];
 	uchar* path = new uchar[h*w];
@@ -159,8 +149,6 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	DistanceTransform2D_NormL1Ret(d, depthChannels[0].rows, depthChannels[0].cols, dt, path);
 
 	Mat outputDepth = Mat(h, w, CV_8UC1, cvScalar(0));
-
-	//output_frame = Mat(h, w, CV_8UC1, Scalar(1));
 
 	for (int i = 0, k = 0; i < h; i++)
 	{
@@ -198,20 +186,33 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 
 	// compare hands depth with objects depth
-	Mat visibileOutput = outputDepth > cubesMt;
+	Mat visibleOutput = outputDepth > cubesMt;
+	Mat visibleOutputMask = Mat(h, w, CV_8UC1);
+	cvtColor(visibleOutput, visibleOutputMask, CV_RGB2GRAY);
 
-	bitwise_and(skin, visibileOutput, skin);
+	bitwise_and(output_frame, visibleOutputMask, output_frame);
+
+
+	// convert to 3 channel image
+
+	Mat skinBin;
+	Mat in[] = { visibleOutputMask, visibleOutputMask, visibleOutputMask };
+	merge(in, 3, skinBin);
+
+	// apply mask to original image
+	bitwise_and(skin, skinBin, skin);
+
+	cvtColor(skin, skin, CV_HSV2RGB);
 	/*
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);
-	imshow("output", visibileOutput);
+	imshow("output", visibleOutputMask);
 	imshow("skin", skin);
 	waitKey(0);
 	*/
-
 	std::copy(skin.data, skin.data + h * w * 3, *input_frame);
 
-    delete[] dt;
+	delete[] dt;
 	delete[] path;
 	delete[] d;
 }
