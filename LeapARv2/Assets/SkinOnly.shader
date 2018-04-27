@@ -1,7 +1,7 @@
 ﻿Shader "Custom/SkinOnly" {
 	Properties{
-		_Color("Color", Color) = (1,1,1,1)
-		_TransparentColor("Transparent Color", Color) = (0,0,0,0)
+		_Color("Color", Color) = (1,1,1)
+		_TransparentColor("Transparent Color", Color) = (0,0,0)
 		_Threshold("Threshhold", Float) = 0.1
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
 	}
@@ -32,20 +32,24 @@
 			//calculate the difference between the texture color and the transparent color
 			//note: we use 'dot' instead of length(transparent_diff) as its faster, and
 			//although it'll really give the length squared, its good enough for our purposes!
-			half3 transparent_diff = c.xyz - _TransparentColor.xyz;
+			half3 transparent_diff = c.rgb - _TransparentColor.rgb;
 			half transparent_diff_squared = dot(transparent_diff,transparent_diff);
 
 			//if colour is too close to the transparent one, discard it.
 			//note: you could do cleverer things like fade out the alpha
-			//if (transparent_diff_squared < _Threshold)
-			//	output_col.a = 0;
-
-			clip(transparent_diff_squared - _Threshold);
+			if (transparent_diff_squared > _Threshold)
+			{
+				o.Emission = output_col.rgb;
+				o.Alpha = 1;
+			}
+			else {
+				o.Alpha = 0;
+			}
+			//clip(transparent_diff_squared - _Threshold);
 
 			//output albedo and alpha just like a normal shader
-			o.Emission = output_col.rgb;
+			//o.Emission = output_col.rgb;
 			//o.Albedo = output_col.rgb;
-			o.Alpha = output_col.a;
 		}
 		
 		ENDCG

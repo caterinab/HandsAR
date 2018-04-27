@@ -261,6 +261,7 @@
   <ItemGroup>
     <Compile Include="Assets\ButtonManager.cs" />
     <Compile Include="Assets\CameraImageAccess.cs" />
+    <Compile Include="Assets\CapsuleHandCustom.cs" />
     <Compile Include="Assets\Common\CameraSettings.cs" />
     <Compile Include="Assets\Common\FrameRateSettings.cs" />
     <Compile Include="Assets\Common\InitErrorHandler.cs" />

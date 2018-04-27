@@ -1,1 +1,5 @@
-﻿  SkinDetection.vcxproj -> C:\Users\cbattisti\Documents\HandsAR\SkinDetection\x64\Release\SkinDetection.exe
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppClean.targets(76,5): warning : Access to the path 'c:\users\cbattisti\documents\handsar\skindetection\x64\release\skindetection.exe' is denied.
+  stdafx.cpp
+  distanceTranform.cpp
+  main.cpp
+LINK : fatal error LNK1104: cannot open file 'C:\Users\cbattisti\Documents\HandsAR\SkinDetection\x64\Release\SkinDetection.exe'
