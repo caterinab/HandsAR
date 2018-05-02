@@ -29,12 +29,12 @@ public class GUIUtilities : MonoBehaviour {
         if (enable) {
             //  GUI.Label(new Rect(10, 20, 600, 40), "Timestamp newest frame in buffer: " + frameProvider.LatestFrame.Timestamp.ToString());
             counter++;
-            counter %= 100;
+            counter %= 10;
             if (counter == 0) {
                 fps = (1.0f / Time.smoothDeltaTime).ToString();
             }
-            GUI.skin.label.fontSize = 28;
-            GUI.Label(new Rect(10, 0, 200, 40), "FPS: " + fps);
+            GUI.skin.label.fontSize = 40;
+            GUI.Label(new Rect(10, 0, 200, 100), "FPS: " + fps);
             //GUI.Label(new Rect(10, 20, 600, 40), "");
         }
     }

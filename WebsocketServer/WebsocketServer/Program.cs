@@ -68,8 +68,8 @@ namespace WebsocketServer
 
         private static void OnMessageHandler(object sender, MessageEventArgs e)
         {
-            ++contatore;
-            contatore %= 7;
+            //++contatore;
+            //contatore %= 7;
             if (contatore == 0)
             {
 

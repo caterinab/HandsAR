@@ -98,14 +98,18 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 		}
 	}
 	
+	imshow("skin", outputDepth);
+	waitKey(0);
+
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
+	blur(cubesMt, cubesMt, Size(10, 10));
 	Mat cubesChannels[3];
 	split(cubesMt, cubesChannels);
 		
 	// compare hands depth with objects depth
 	Mat visibleOutput = Mat(h_xs, w_xs, CV_8UC1, Scalar(0));
-	visibleOutput = outputDepth > cubesChannels[0];
+	visibleOutput = outputDepth >= cubesChannels[0];
 
 	//bitwise_and(output_frame, visibleOutput, output_frame);
 

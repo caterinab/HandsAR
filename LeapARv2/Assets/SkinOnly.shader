@@ -1,8 +1,8 @@
 ﻿Shader "Custom/SkinOnly" {
 	Properties{
-		_Color("Color", Color) = (1,1,1)
+		//_Color("Color", Color) = (1,1,1)
 		_TransparentColor("Transparent Color", Color) = (0,0,0)
-		_Threshold("Threshhold", Float) = 0.1
+		_Threshold("Threshold", Float) = 0.1
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
 	}
 	SubShader{
@@ -27,7 +27,7 @@
 			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 
 			// Output colour will be the texture color * the vertex colour
-			half4 output_col = c * _Color;
+			//half4 output_col = c * _Color;
 
 			//calculate the difference between the texture color and the transparent color
 			//note: we use 'dot' instead of length(transparent_diff) as its faster, and
@@ -39,7 +39,8 @@
 			//note: you could do cleverer things like fade out the alpha
 			if (transparent_diff_squared > _Threshold)
 			{
-				o.Emission = output_col.rgb;
+				//o.Emission = output_col.rgb;
+				o.Emission = c.rgb;
 				o.Alpha = 1;
 			}
 			else {

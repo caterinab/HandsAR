@@ -3,7 +3,6 @@
 [ExecuteInEditMode]
 public class RenderCameraDepth : MonoBehaviour
 {
-
     public Material mat;
 
     void Start()
