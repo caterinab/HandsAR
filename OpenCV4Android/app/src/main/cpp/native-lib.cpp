@@ -122,7 +122,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	split(handsMt, depthChannels);
 
 	threshold(depthChannels[0], depthChannels[0], 0, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
-	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 3);
+	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 1);
 
 	double* dt = new double[h_xs * w_xs];
 	uchar* path = new uchar[h_xs * w_xs];
@@ -182,18 +182,18 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
-	blur(cubesMt, cubesMt, Size(11, 11));
+    //morphologyEx(cubesMt, cubesMt, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
+    //blur(cubesMt, cubesMt, Size(5, 5));
 	Mat cubesChannels[3];
 	split(cubesMt, cubesChannels);
-
-    blur(outputDepth, outputDepth, Size(3, 3));
 
 	// compare hands depth with objects depth
 	Mat visibleOutput = Mat(h_xs, w_xs, CV_8UC1, Scalar(0));
 	visibleOutput = outputDepth >= cubesChannels[0];
 
 	//bitwise_and(output_frame, visibleOutput, output_frame);
-
+    morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 1);
+    bitwise_and(visibleOutput, output_frame, visibleOutput);
 	// convert to 3 channel image
 	Mat outputBin;
 	Mat in[] = { visibleOutput, visibleOutput, visibleOutput };

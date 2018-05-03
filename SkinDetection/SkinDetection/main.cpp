@@ -18,7 +18,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	flip(skin, skin, 0);
 
 	//cvtColor(frame, output_frame, CV_BGR2GRAY);
-	cvtColor(skin, skinHSV, CV_BGR2HSV);
+	cvtColor(skin, skinHSV, CV_RGB2HSV);
 	//cvtColor(bgr_frame, frame, CV_BGR2YCrCb);
 	//GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
@@ -33,18 +33,19 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	//resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
 	//resize(output_frame, output_frame, Size(), 2, 2, INTER_NEAREST);
-	
+
 	Mat handsMt = Mat(h, w, CV_8UC3, *hands);
 	resize(handsMt, handsMt, Size(), 0.5, 0.5, INTER_LINEAR);
 	Mat depthChannels[3];
 	split(handsMt, depthChannels);
 
 	threshold(depthChannels[0], depthChannels[0], 0, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
-	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 3);
+	// dilate mask to reduce border imprecision
+	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 1);
 
 	double* dt = new double[h_xs * w_xs];
 	uchar* path = new uchar[h_xs * w_xs];
-	
+
 	double* d = new double[h_xs * w_xs];
 
 	for (int i = 0, k = 0; i < h_xs; i++)
@@ -53,7 +54,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 		for (int j = 0; j < w_xs; j++, k++)
 		{
-			if (m[j] == 0) 
+			if (m[j] == 0)
 			{
 				d[k] = 0.0;
 			}
@@ -63,9 +64,9 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 			}
 		}
 	}
-	
+
 	DistanceTransform2D_NormL1Ret(d, h_xs, w_xs, dt, path);
-	
+
 	Mat outputDepth = Mat(h_xs, w_xs, CV_8UC1, cvScalar(0));
 
 	for (int i = 0, k = 0; i < h_xs; i++)
@@ -75,8 +76,8 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 		for (int j = 0; j < w_xs; j++, k++)
 		{
-			if (s[j] > 0) 
-			{	
+			if (s[j] > 0)
+			{
 				int code;
 				int dim, index;
 				int r0 = i, c0 = j;
@@ -97,21 +98,21 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 			}
 		}
 	}
-	
-	imshow("skin", outputDepth);
-	waitKey(0);
 
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
-	blur(cubesMt, cubesMt, Size(10, 10));
+	//morphologyEx(cubesMt, cubesMt, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
+	//blur(cubesMt, cubesMt, Size(5, 5));
 	Mat cubesChannels[3];
 	split(cubesMt, cubesChannels);
-		
+
 	// compare hands depth with objects depth
 	Mat visibleOutput = Mat(h_xs, w_xs, CV_8UC1, Scalar(0));
 	visibleOutput = outputDepth >= cubesChannels[0];
 
-	//bitwise_and(output_frame, visibleOutput, output_frame);
+	// dilate output to remove holes and spikes + AND to recover precise border
+	morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 1);
+	bitwise_and(visibleOutput, output_frame, visibleOutput);
 
 	// convert to 3 channel image
 	Mat outputBin;
@@ -121,28 +122,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	// apply mask to original image
 	bitwise_and(skin, outputBin, skin);
 
-	//resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
-	/*
-	Mat t = Mat(h, w, CV_8UC3);
-
-	for (int i = 0; i < h_xs; i++)
-	{
-		Point3_<uchar>* s = skin.ptr<Point3_<uchar> >(i);
-		Point3_<uchar>* m1 = t.ptr<Point3_<uchar> >(2*i);
-		Point3_<uchar>* m2 = t.ptr<Point3_<uchar> >(2 * i+1);
-
-		for (int j = 0; j < w_xs; j++)
-		{
-			m1[2*j].x = s[j].x;m1[2 * j].y = s[j].y;m1[2 * j].z = s[j].z;
-			m1[2 * j+1].x = s[j].x;m1[2 * j+1].y = s[j].y;m1[2 * j+1].z = s[j].z;
-			m2[2 * j].x = s[j].x;m2[2 * j].y = s[j].y;m2[2 * j].z = s[j].z;
-			m2[2 * j + 1].x = s[j].x;m2[2 * j + 1].y = s[j].y;m2[2 * j + 1].z = s[j].z;
-		}
-	}
-
-	imshow("", t);
-	waitKey(0);
-	*/
+	resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
 	/*
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);

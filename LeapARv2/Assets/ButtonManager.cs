@@ -15,6 +15,7 @@ public class ButtonManager : MonoBehaviour {
         float x = PlayerPrefs.GetFloat("sensorX", 0);
         float y = PlayerPrefs.GetFloat("sensorY", 0);
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
+        Debug.Log(x + " " + y + " " + z);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         //PlayerPrefs.SetString("hostIP", GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().websocketIP);
 
