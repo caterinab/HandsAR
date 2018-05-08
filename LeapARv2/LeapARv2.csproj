@@ -262,6 +262,7 @@
     <Compile Include="Assets\ButtonManager.cs" />
     <Compile Include="Assets\CameraImageAccess.cs" />
     <Compile Include="Assets\CapsuleHandCustom.cs" />
+    <Compile Include="Assets\ClippingRange.cs" />
     <Compile Include="Assets\Common\CameraSettings.cs" />
     <Compile Include="Assets\Common\FrameRateSettings.cs" />
     <Compile Include="Assets\Common\InitErrorHandler.cs" />
@@ -508,8 +509,10 @@
     <Compile Include="Assets\SamplesResources\Scripts\Reticle.cs" />
     <Compile Include="Assets\SamplesResources\Scripts\TransitionManager.cs" />
     <Compile Include="Assets\SamplesResources\Scripts\ViewTrigger.cs" />
+    <Compile Include="Assets\Save.cs" />
     <Compile Include="Assets\Script\CustomLeap\QuaternionHelper.cs" />
     <Compile Include="Assets\Script\FrameConverter.cs" />
+    <Compile Include="Assets\Script\FrameConverterV2.cs" />
     <Compile Include="Assets\Script\GUI\GUIUtilities.cs" />
     <Compile Include="Assets\Script\LeapImage.cs" />
     <Compile Include="Assets\Script\LeapServiceProviderNew.cs" />

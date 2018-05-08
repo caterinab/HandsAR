@@ -40,10 +40,10 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	split(handsMt, depthChannels);
 
 	threshold(depthChannels[0], depthChannels[0], 0, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
-	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(9, 9, 1), Point(-1, -1), 3);
+	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(21, 21, 1), Point(-1, -1), 1);
 
 	double* dt = new double[h_xs * w_xs];
-	uchar* path = new uchar[h_xs * w_xs];
+	int* path = new int[h_xs * 2 * w_xs];
 
 	//double* d = new double[h_xs * w_xs];
 
@@ -52,24 +52,55 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	/*
 	for (int i = 0, k = 0; i < h_xs; i++)
 	{
-		const uchar* m = depthChannels[0].ptr<uchar>(i);
+	const uchar* m = depthChannels[0].ptr<uchar>(i);
 
-		for (int j = 0; j < w_xs; j++, k++)
-		{
-			if (m[j] == 0)
-			{
-				d[k] = 0.0;
-			}
-			else
-			{
-				d[k] = 1.0e20;
-			}
-		}
+	for (int j = 0; j < w_xs; j++, k++)
+	{
+	if (m[j] == 0)
+	{
+	d[k] = 0.0;
+	}
+	else
+	{
+	d[k] = 1.0e20;
+	}
+	}
 	}
 	*/
-	DistanceTransform2D_NormL1Ret(doubleMt.ptr<double>(0), h_xs, w_xs, dt, path);
+	DistanceTransform2D_NormL2Ret(doubleMt.ptr<double>(0), h_xs, w_xs, dt, path);
 
 	Mat outputDepth = Mat(h_xs, w_xs, CV_8UC1, cvScalar(0));
+	/*
+	for (int i = 0, k = 0; i < h_xs; i++)
+	{
+	const uchar* s = output_frame.ptr<uchar>(i);
+	uchar* o = outputDepth.ptr<uchar>(i);
+
+	for (int j = 0; j < w_xs; j++, k++)
+	{
+	if (s[j] > 0)
+	{
+	int code;
+	int dim, index;
+	int r0 = i, c0 = j;
+	bool moved = false;
+
+	while ((code = path[r0 * w_xs + c0]) != 0)
+	{
+	moved = true;
+	DT_code2index(code, &dim, &index);
+	if (dim == 2)
+	r0 += index;
+	if (dim == 1)
+	c0 += index;
+	}
+
+	const uchar* d = depthChannels[1].ptr<uchar>(r0);
+	o[j] = d[c0];
+	}
+	}
+	}
+	*/
 
 	for (int i = 0, k = 0; i < h_xs; i++)
 	{
@@ -80,20 +111,8 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 		{
 			if (s[j] > 0)
 			{
-				int code;
-				int dim, index;
-				int r0 = i, c0 = j;
-				bool moved = false;
-
-				while ((code = path[r0 * w_xs + c0]) != 0)
-				{
-					moved = true;
-					DT_code2index(code, &dim, &index);
-					if (dim == 2)
-						r0 += index;
-					if (dim == 1)
-						c0 += index;
-				}
+				int r0, c0;
+				bool moved = DistanceTransform2D_NormL2_GetClosest(i, j, path, h_xs, w_xs, &r0, &c0);
 
 				const uchar* d = depthChannels[1].ptr<uchar>(r0);
 				o[j] = d[c0];
@@ -103,13 +122,10 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
-	blur(cubesMt, cubesMt, Size(5, 5));
-	//morphologyEx(cubesMt, cubesMt, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
 	Mat cubesChannels[3];
 	split(cubesMt, cubesChannels);
 
 	// compare hands depth with objects depth
-
 	Mat visibleOutput = Mat(h_xs, w_xs, CV_8UC1, Scalar(0));
 	//visibleOutput = outputDepth >= cubesChannels[0];
 
@@ -143,13 +159,13 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	bitwise_and(skin, outputBin, skin);
 
 	resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
-	/*
+
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);
 	imshow("output", visibleOutput);
 	imshow("skin", skin);
 	waitKey(0);
-	*/
+	
 	std::copy(skin.data, skin.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
 
 	delete[] dt;
@@ -171,9 +187,9 @@ int main()
 	}
 	*/
 	Mat img = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\a.jpg");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands_depth.png");
 	Mat img2 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\depth.jpg");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\cube_depth.png");
 	Mat hands = imread(
 		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands.jpg");
 

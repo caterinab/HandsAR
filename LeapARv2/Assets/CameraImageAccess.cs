@@ -1,6 +1,7 @@
 using UnityEngine;
 using Vuforia;
 using System.Runtime.InteropServices;
+using System.IO;
 
 internal static class OpenCVInterop
 {
@@ -30,7 +31,7 @@ public class CameraImageAccess : MonoBehaviour
     #endregion // PRIVATE_MEMBERS
 
     #region MONOBEHAVIOUR_METHODS
-
+    
     void Start()
     {
 
@@ -51,6 +52,8 @@ public class CameraImageAccess : MonoBehaviour
         cam1 = GameObject.Find("Camera").GetComponent<Camera>();
         cam2 = GameObject.Find("CameraObj").GetComponent<Camera>();
         ar = GameObject.Find("ARCamera").GetComponent<Camera>();
+
+        Debug.Log("Supports Depth mode: " + SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.Depth));
     }
 
     #endregion // MONOBEHAVIOUR_METHODS
@@ -105,13 +108,13 @@ public class CameraImageAccess : MonoBehaviour
                     Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
 
                     if (image != null)
-                    {/*
-                    Debug.Log(
-                        "\nImage Format: " + image.PixelFormat +
-                        "\nImage Size:   " + image.Width + "x" + image.Height +
-                        "\nBuffer Size:  " + image.BufferWidth + "x" + image.BufferHeight +
-                        "\nImage Stride: " + image.Stride + "\n"
-                    );*/
+                    {
+                    //Debug.Log(
+                    //    "\nImage Format: " + image.PixelFormat +
+                    //    "\nImage Size:   " + image.Width + "x" + image.Height +
+                    //    "\nBuffer Size:  " + image.BufferWidth + "x" + image.BufferHeight +
+                    //    "\nImage Stride: " + image.Stride + "\n"
+                    //);
 
                         byte[] pixels = image.Pixels;
 
@@ -122,13 +125,13 @@ public class CameraImageAccess : MonoBehaviour
                             screenshot.Apply();
                             
                             byte[] hands = screenshot.GetRawTextureData();
-
+                            
                             RenderTexture.active = rtCubes;
                             screenshot.ReadPixels(new Rect(0, 0, rtCubes.width, rtCubes.height), 0, 0);
                             screenshot.Apply();
 
                             byte[] cubes = screenshot.GetRawTextureData();
-
+                            
                             if (hands.Length > 0 && cubes.Length > 0)
                             {
                                 System.IntPtr pixelsPtr = Marshal.AllocHGlobal(pixels.Length);

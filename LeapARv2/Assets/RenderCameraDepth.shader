@@ -27,13 +27,12 @@ Shader "Custom/RenderCameraDepth"
 				return o;
 			}
 
-			sampler2D _CameraDepthTexture;
+			sampler2D_float _CameraDepthTexture;
 
-			fixed3 frag(v2f i) : SV_Target
+			half3 frag(v2f i) : COLOR
 			{
-				float2 uv = i.screenuv.xy / i.screenuv.w;
-				float depth = 1 - Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv));
-				return fixed3(depth, depth, depth);
+				float depthValue = 1 - Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenuv)).r);
+				return half3(depthValue, depthValue, depthValue);
 			}
 			ENDCG
 		}
