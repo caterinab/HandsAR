@@ -556,6 +556,7 @@
     <None Include="Assets\SamplesResources\Shaders\SkyBlend.shader" />
     <None Include="Assets\SamplesResources\Shaders\TransparentUnlit.shader" />
     <None Include="Assets\SkinOnly.shader" />
+    <None Include="Assets\StreamingAssets\Vuforia\Evaluation.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\FSpinner.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Images.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_ModelTarget.xml" />

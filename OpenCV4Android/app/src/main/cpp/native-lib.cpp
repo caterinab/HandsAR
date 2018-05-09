@@ -201,8 +201,8 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
     //GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
     // generate binary mask
-    Scalar hsv_l(0, 38, 51);
-    Scalar hsv_h(17, 250, 242);
+    Scalar hsv_l(0, 30, 60);
+    Scalar hsv_h(20, 150, 255);
     inRange(skinHSV, hsv_l, hsv_h, output_frame);
 
     //morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion
@@ -322,9 +322,12 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
         }
     }
     // dilate output to remove holes and spikes + AND to recover precise border
-    morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
-    bitwise_and(visibleOutput, output_frame, visibleOutput);
-    /*
+    //morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
+    GaussianBlur(visibleOutput, visibleOutput, Size(13, 13), 0);
+    //medianBlur(visibleOutput, visibleOutput, 7);
+    threshold(visibleOutput, visibleOutput, 0, 255, THRESH_BINARY);
+    morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, Mat1b(11, 11, 1), Point(-1, -1), 1);
+    bitwise_and(visibleOutput, output_frame, visibleOutput);    /*
     // convert to 3 channel image
     Mat outputBin;
     Mat in[] = { visibleOutput, visibleOutput, visibleOutput };
