@@ -33,8 +33,8 @@ public class GUIUtilities : MonoBehaviour {
             if (counter == 0) {
                 fps = (1.0f / Time.smoothDeltaTime).ToString();
             }
-            GUI.skin.label.fontSize = 40;
-            GUI.Label(new Rect(10, 0, 200, 100), "FPS: " + fps);
+            GUI.skin.label.fontSize = 50;
+            GUI.Label(new Rect(10, 0, 400, 100), "FPS: " + fps);
             //GUI.Label(new Rect(10, 20, 600, 40), "");
         }
     }
