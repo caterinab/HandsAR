@@ -1,3 +1,4 @@
+using Leap;
 using Leap.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,10 +14,10 @@ public class ButtonManager : MonoBehaviour {
     public GameObject canvas;
     private int screenshotCount = 0;
     private int photoCount = 0;
+    public RenderTexture rtCubes;
 
     protected const string MEDIA_STORE_IMAGE_MEDIA = "android.provider.MediaStore$Images$Media";
     protected static AndroidJavaObject m_Activity;
-
 
     private void Start()
     {
@@ -43,40 +44,84 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("CanvasButtons").SetActive(isActive);
     }
 
+    public void PlaneXPlus()
+    {
+        Vector3 p = GameObject.Find("Plane").transform.localPosition;
+        p.x += delta4;
+        GameObject.Find("Plane").transform.localPosition = p;
+    }
+
+    public void PlaneXMinus()
+    {
+        Vector3 p = GameObject.Find("Plane").transform.localPosition;
+        p.x -= delta4;
+        GameObject.Find("Plane").transform.localPosition = p;
+    }
+
+    public void PlaneYPlus()
+    {
+        Vector3 p = GameObject.Find("Plane").transform.localPosition;
+        p.y += delta4;
+        GameObject.Find("Plane").transform.localPosition = p;
+    }
+
+    public void PlaneYMinus()
+    {
+        Vector3 p = GameObject.Find("Plane").transform.localPosition;
+        if ((p.y - delta4) >= 0)
+        {
+            p.y -= delta4;
+            GameObject.Find("Plane").transform.localPosition = p;
+        }
+    }
+
+    public void PlaneRPlus()
+    {
+        GameObject.Find("Plane").transform.Rotate(0, 5, 0, Space.World);
+    }
+
+    public void PlaneRMinus()
+    {
+        GameObject.Find("Plane").transform.Rotate(0, -5, 0, Space.World);
+    }
+
     public void CaptureScreenshot()
     {
-        StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height));
+        StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));
+
+        //Debug.Log(GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().jsonFrameString);   // gets cut at 1KB
+
+        StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 1));
+        StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 2));
     }
 
-    public void CapturePhoto()
-    {
-        StartCoroutine(CapturePhotoCoroutine(Screen.width, Screen.height));
-    }
-
-    private IEnumerator CaptureScreenshotCoroutine(int width, int height)
+    private IEnumerator CaptureScreenshotCoroutine(int width, int height, int type)
     {
         screenshotCount++;
         yield return new WaitForEndOfFrame();
-        Texture2D tex = new Texture2D(width, height);
-        tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+
+        switch (type)
+        {
+            case 0:
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                break;
+            case 1:
+                tex.LoadRawTextureData(GameObject.Find("CameraImageAccess").GetComponent<CameraImageAccess>().pixels);
+                break;
+            case 2:
+                RenderTexture.active = rtCubes;
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                break;
+            default:
+                break;
+        }
+
         tex.Apply();
 
         yield return tex;
         string path = SaveImageToGallery(tex, "screenshot" + screenshotCount, "Description");
         Debug.Log("Screenshot has been saved at:\n" + path);
-    }
-
-    private IEnumerator CapturePhotoCoroutine(int width, int height)
-    {
-        photoCount++;
-        yield return new WaitForEndOfFrame();
-        Texture2D tex = new Texture2D(width, height);
-        tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-        tex.Apply();
-
-        yield return tex;
-        string path = SaveImageToGallery(tex, "photo" + screenshotCount, "Description");
-        Debug.Log("Photo has been saved at:\n" + path);
     }
 
     protected static string SaveImageToGallery(Texture2D a_Texture, string a_Title, string a_Description)

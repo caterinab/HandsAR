@@ -21,9 +21,12 @@ namespace Leap.Unity
         private const float CYLINDER_MESH_RESOLUTION = 0.1f; //in centimeters, meshes within this resolution will be re-used
         private const int THUMB_BASE_INDEX = (int)Finger.FingerType.TYPE_THUMB * 4;
         private const int PINKY_BASE_INDEX = (int)Finger.FingerType.TYPE_PINKY * 4;
+        private const int INDEX_BASE_INDEX = (int)Finger.FingerType.TYPE_INDEX * 4;
+        private const int MIDDLE_BASE_INDEX = (int)Finger.FingerType.TYPE_MIDDLE * 4;
+        private const int RING_BASE_INDEX = (int)Finger.FingerType.TYPE_RING * 4;
 
-        private const float SPHERE_RADIUS = 0.011f;
-        private const float CYLINDER_RADIUS = 0.011f;
+        private const float SPHERE_RADIUS = 0.009f;
+        private const float CYLINDER_RADIUS = 0.009f;
         private const float PALM_RADIUS = 0.015f;
 
         private static int _leftColorIndex = 0;
@@ -133,11 +136,11 @@ namespace Leap.Unity
             //Now we just have a few more spheres for the hands
             //PalmPos, WristPos, and mockThumbJointPos, which is derived and not taken from the frame obj
 
-            Vector3 palmPosition = _hand.PalmPosition.ToVector3();
-            drawSphere(palmPosition, PALM_RADIUS);
+            //Vector3 palmPosition = _hand.PalmPosition.ToVector3();
+            //drawSphere(palmPosition, PALM_RADIUS);
 
-            Vector3 wristPos = _hand.PalmPosition.ToVector3();
-            drawSphere(wristPos);
+            //Vector3 wristPos = _hand.PalmPosition.ToVector3();
+            //drawSphere(wristPos);
 
             Vector3 thumbBaseToPalm = _spherePositions[THUMB_BASE_INDEX] - _hand.PalmPosition.ToVector3();
             Vector3 mockThumbJointPos = _hand.PalmPosition.ToVector3() + Vector3.Reflect(thumbBaseToPalm, _hand.Basis.xBasis.ToVector3());
@@ -196,7 +199,19 @@ namespace Leap.Unity
 
                 drawCylinder(posA, posB);
             }
-
+            /*
+            //Draw cylinders inside palm
+            //middle
+            Vector3 pA = _spherePositions[MIDDLE_BASE_INDEX];
+            Vector3 baseToPalm = _hand.PalmPosition.ToVector3() - pA;
+            Vector3 mockJointPos = _hand.PalmPosition.ToVector3() + Vector3.Reflect(baseToPalm, _hand.Basis.xBasis.ToVector3());
+            drawCylinder(pA, mockJointPos);
+            //ring
+            pA = _spherePositions[RING_BASE_INDEX];
+            baseToPalm = _hand.PalmPosition.ToVector3() - pA;
+            mockJointPos = _hand.PalmPosition.ToVector3() + Vector3.Reflect(baseToPalm, _hand.Basis.xBasis.ToVector3());
+            drawCylinder(pA, mockJointPos);
+            */
             //Draw the rest of the hand
             drawCylinder(mockThumbJointPos, THUMB_BASE_INDEX);
             drawCylinder(mockThumbJointPos, PINKY_BASE_INDEX);
@@ -207,7 +222,23 @@ namespace Leap.Unity
             //multiply radius by 2 because the default unity sphere has a radius of 0.5 meters at scale 1.
             Graphics.DrawMesh(_sphereMesh, Matrix4x4.TRS(position, Quaternion.identity, Vector3.one * radius * 2.0f * transform.lossyScale.x), _sphereMat, 9);
         }
+        /*
+        private void DrawPalm(Vector3 a, Vector3 b)
+        {
+            int f1 = getFingerJointIndex(3, 0);
+            int f2 = getFingerJointIndex(3, 0);
 
+            Vector3 pA = _spherePositions[a];
+            Vector3 pB = _hand.PalmPosition.ToVector3();
+
+            float length = (a - b).magnitude * 3;
+
+            Graphics.DrawMesh(getCylinderMesh(length),
+                              Matrix4x4.TRS(a, Quaternion.LookRotation(b - a), new Vector3(transform.lossyScale.x*2, transform.lossyScale.x*1.5f, 1)),
+                              _material,
+                              gameObject.layer);
+        }
+        */
         private void drawCylinder(Vector3 a, Vector3 b)
         {
             float length = (a - b).magnitude;

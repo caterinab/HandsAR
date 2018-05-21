@@ -201,8 +201,8 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
     //GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
     // generate binary mask
-    Scalar hsv_l(0, 30, 60);
-    Scalar hsv_h(20, 150, 255);
+    Scalar hsv_l(0, 60, 60);
+    Scalar hsv_h(20, 170, 255);
     inRange(skinHSV, hsv_l, hsv_h, output_frame);
 
     //morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion

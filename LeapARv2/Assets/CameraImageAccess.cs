@@ -18,7 +18,8 @@ public class CameraImageAccess : MonoBehaviour
     private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
     Texture2D tex, screenshot;
-    
+    public byte[] pixels;
+
     public RenderTexture rtHands, rtCubes;
 
     // set to phone camera resolution
@@ -116,7 +117,7 @@ public class CameraImageAccess : MonoBehaviour
                     //    "\nImage Stride: " + image.Stride + "\n"
                     //);
 
-                        byte[] pixels = image.Pixels;
+                        pixels = image.Pixels;
 
                         if (pixels.Length > 0)
                         {
