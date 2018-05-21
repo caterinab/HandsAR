@@ -496,6 +496,7 @@
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\MengerSponge.cs" />
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\PinchDraw.cs" />
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\SpawnBalls.cs" />
+    <Compile Include="Assets\NewMagneticPinch.cs" />
     <Compile Include="Assets\RenderCameraDepth.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Astronaut.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Augmentation.cs" />
