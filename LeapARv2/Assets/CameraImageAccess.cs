@@ -6,7 +6,7 @@ using System.IO;
 internal static class OpenCVInterop
 {
     [DllImport("native-lib")]
-    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels, ref System.IntPtr hands, ref System.IntPtr cubes);
+    internal static extern void DetectSkin(int h, int w, ref System.IntPtr pixels, ref System.IntPtr hands, ref System.IntPtr cubes, ref System.IntPtr output);
 }
 
 public class CameraImageAccess : MonoBehaviour
@@ -47,7 +47,7 @@ public class CameraImageAccess : MonoBehaviour
         VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
         
-        tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+        tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
         screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
 
         cam1 = GameObject.Find("Camera").GetComponent<Camera>();
@@ -132,7 +132,7 @@ public class CameraImageAccess : MonoBehaviour
                             screenshot.Apply();
 
                             byte[] cubes = screenshot.GetRawTextureData();
-                            
+
                             if (hands.Length > 0 && cubes.Length > 0)
                             {
                                 System.IntPtr pixelsPtr = Marshal.AllocHGlobal(pixels.Length);
@@ -141,14 +141,19 @@ public class CameraImageAccess : MonoBehaviour
                                 Marshal.Copy(hands, 0, handsPtr, hands.Length);
                                 System.IntPtr cubesPtr = Marshal.AllocHGlobal(cubes.Length);
                                 Marshal.Copy(cubes, 0, cubesPtr, cubes.Length);
+                                int l = image.Height * image.Width * 4;
+                                byte[] output = new byte[l];
+                                System.IntPtr outputPtr = Marshal.AllocHGlobal(l);
+                                Marshal.Copy(output, 0, outputPtr, l);
+                                
+                                OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref handsPtr, ref cubesPtr, ref outputPtr);
+                                byte[] t = new byte[l];
 
-                                OpenCVInterop.DetectSkin(image.Height, image.Width, ref pixelsPtr, ref handsPtr, ref cubesPtr);
-                                byte[] t = new byte[pixels.Length];
-
-                                Marshal.Copy(pixelsPtr, t, 0, t.Length);
+                                Marshal.Copy(outputPtr, t, 0, t.Length);
                                 Marshal.FreeHGlobal(pixelsPtr);
                                 Marshal.FreeHGlobal(handsPtr);
                                 Marshal.FreeHGlobal(cubesPtr);
+                                Marshal.FreeHGlobal(outputPtr);
 
                                 tex.LoadRawTextureData(t);
                                 tex.Apply();

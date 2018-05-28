@@ -85,6 +85,17 @@ public class ButtonManager : MonoBehaviour {
         GameObject.Find("Plane").transform.Rotate(0, -5, 0, Space.World);
     }
 
+    public void CaptureSingleScreenshot()
+    {
+        //StartCoroutine(Waiter());
+        StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));
+    }
+
+    IEnumerator Waiter()
+    {
+        yield return new WaitForSeconds(10);
+    }
+
     public void CaptureScreenshot()
     {
         StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));

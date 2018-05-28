@@ -259,9 +259,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AlternativePinch.cs" />
     <Compile Include="Assets\ButtonManager.cs" />
     <Compile Include="Assets\CameraImageAccess.cs" />
     <Compile Include="Assets\CapsuleHandCustom.cs" />
+    <Compile Include="Assets\ClippingPlanes.cs" />
     <Compile Include="Assets\Common\CameraSettings.cs" />
     <Compile Include="Assets\Common\FrameRateSettings.cs" />
     <Compile Include="Assets\Common\InitErrorHandler.cs" />
@@ -496,7 +498,7 @@
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\MengerSponge.cs" />
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\PinchDraw.cs" />
     <Compile Include="Assets\LeapMotionModules\DetectionExamples\Scripts\SpawnBalls.cs" />
-    <Compile Include="Assets\NewMagneticPinch.cs" />
+    <Compile Include="Assets\MagneticPinch.cs" />
     <Compile Include="Assets\RenderCameraDepth.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Astronaut.cs" />
     <Compile Include="Assets\SamplesResources\AugmentationAssets\Scripts\Augmentations\Augmentation.cs" />
@@ -570,6 +572,7 @@
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_Object_OT.xml" />
     <None Include="Assets\StreamingAssets\Vuforia\VuforiaMars_VuMark.xml" />
     <None Include="Assets\StreamingAssets\build_info.txt" />
+    <None Include="Assets\TransparentZWrite.shader" />
     <None Include="Assets\Vuforia\Shaders\BrightTexture.shader" />
     <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />
     <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
