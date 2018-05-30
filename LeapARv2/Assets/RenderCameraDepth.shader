@@ -31,7 +31,7 @@ Shader "Custom/RenderCameraDepth"
 
 			half3 frag(v2f i) : COLOR
 			{
-				float depthValue = 1 - Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenuv)).r);
+				float depthValue = 1 - Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenuv)).x);
 				return half3(depthValue, depthValue, depthValue);
 			}
 			ENDCG

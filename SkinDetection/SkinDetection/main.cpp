@@ -30,7 +30,8 @@ String type2str(int type) {
 	return r;
 }
 
-extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes) {
+extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes, uchar** output) {
+	clock_t begin;
 	Mat3b skin, skinHSV;
 	Mat1b output_frame;
 	int h_xs = h / 2;
@@ -65,6 +66,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	threshold(depthChannels[0], depthChannels[0], 0, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
 	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(21, 21, 1), Point(-1, -1), 1);
 
+	begin = clock();
 	double* dt = new double[h_xs * w_xs];
 	int* path = new int[h_xs * 2 * w_xs];
 
@@ -90,6 +92,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	}
 	}
 	*/
+
 	DistanceTransform2D_NormL2Ret(doubleMt.ptr<double>(0), h_xs, w_xs, dt, path);
 
 	Mat outputDepth = Mat(h_xs, w_xs, CV_8UC1, cvScalar(0));
@@ -143,6 +146,9 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 		}
 	}
 
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	cout << elapsed_secs << "\n";
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
 	Mat cubesChannels[3];
@@ -166,16 +172,15 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 			}
 		}
 	}
-	
+
 	// dilate output to remove holes and spikes + AND to recover precise border
 	//morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
 	GaussianBlur(visibleOutput, visibleOutput, Size(13, 13), 0);
 	//medianBlur(visibleOutput, visibleOutput, 7);
 	threshold(visibleOutput, visibleOutput, 0, 255, THRESH_BINARY);
 	morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, Mat1b(11, 11, 1), Point(-1, -1), 1);
-	//morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, (13, 13), Point(-1, -1), 1);
 	bitwise_and(visibleOutput, output_frame, visibleOutput);
-	
+
 	/*
 	// convert to 3 channel image
 	Mat outputBin;
@@ -190,10 +195,12 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
 	/*
-	imshow("cubesBin", cubesChannels[0]);
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);
-	imshow("output", visibleOutput);*/
+	imshow("output", visibleOutput);
+	imshow("skin", skin);
+	waitKey(0);
+	*/
 
 	vector<Mat> rgb;
 	Mat alpha;
@@ -209,10 +216,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	Mat dst;
 	merge(rgba, dst);
 
-	//cvtColor(dst, dst, CV_RGB2RGBA);
-
-	
-	std::copy(skin.data, skin.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
+	std::copy(dst.data, dst.data + h * w * 4, stdext::checked_array_iterator<uchar*>(*output, h*w * 4));
 
 	delete[] dt;
 	delete[] path;
@@ -233,22 +237,23 @@ int main()
 	}
 	*/
 	Mat img = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\img.png");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\1.jpg");
 	Mat img2 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\8P.png");
-	Mat hands = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands.jpg");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\2.jpg");
+	Mat img3 = imread(
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\3.jpg");
 
-	VideoCapture c("sample.mp4");
-	Mat frame;
-	clock_t begin;
+	//VideoCapture c("sample.mp4");
+	//Mat frame;
+	//clock_t begin;
 	while (true) {
-		c >> frame;
-		begin = clock();
-		DetectSkin(hands.rows, hands.cols, &hands.data, &img.data, &img2.data);
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		cout << 1 / elapsed_secs << " fps\n";
+		//c >> frame;
+		//begin = clock();
+		Mat out = Mat(img.rows, img.cols, CV_8UC4);
+		DetectSkin(img.rows, img.cols, &img.data, &img2.data, &img3.data, &out.data);
+		//clock_t end = clock();
+		//double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		//cout << elapsed_secs << "\n";
 		/*
 		imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
 		waitKey(1);

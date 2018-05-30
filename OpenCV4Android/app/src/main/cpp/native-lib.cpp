@@ -321,13 +321,16 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
             }
         }
     }
+
     // dilate output to remove holes and spikes + AND to recover precise border
     //morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
     GaussianBlur(visibleOutput, visibleOutput, Size(13, 13), 0);
     //medianBlur(visibleOutput, visibleOutput, 7);
     threshold(visibleOutput, visibleOutput, 0, 255, THRESH_BINARY);
     morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, Mat1b(11, 11, 1), Point(-1, -1), 1);
-    bitwise_and(visibleOutput, output_frame, visibleOutput);    /*
+    bitwise_and(visibleOutput, output_frame, visibleOutput);
+
+    /*
     // convert to 3 channel image
     Mat outputBin;
     Mat in[] = { visibleOutput, visibleOutput, visibleOutput };

@@ -13,6 +13,7 @@ public class ClippingPlanes : MonoBehaviour
     {
         cameraHands.farClipPlane += 0.01f;
         cameraObjects.farClipPlane += 0.01f;
+        Debug.Log("far: " + cameraHands.farClipPlane);
     }
 
 
@@ -20,6 +21,7 @@ public class ClippingPlanes : MonoBehaviour
     {
         cameraHands.farClipPlane -= 0.01f;
         cameraObjects.farClipPlane -= 0.01f;
+        Debug.Log("far: " + cameraHands.farClipPlane);
     }
 
     public void Start()

@@ -14,7 +14,7 @@ public class ButtonManager : MonoBehaviour {
     public GameObject canvas;
     private int screenshotCount = 0;
     private int photoCount = 0;
-    public RenderTexture rtCubes;
+    public RenderTexture rtCubes, rtHands;
 
     protected const string MEDIA_STORE_IMAGE_MEDIA = "android.provider.MediaStore$Images$Media";
     protected static AndroidJavaObject m_Activity;
@@ -98,12 +98,13 @@ public class ButtonManager : MonoBehaviour {
 
     public void CaptureScreenshot()
     {
-        StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));
+        //StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));
 
         //Debug.Log(GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().jsonFrameString);   // gets cut at 1KB
 
         StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 1));
         StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 2));
+        StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 3));
     }
 
     private IEnumerator CaptureScreenshotCoroutine(int width, int height, int type)
@@ -122,6 +123,10 @@ public class ButtonManager : MonoBehaviour {
                 break;
             case 2:
                 RenderTexture.active = rtCubes;
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                break;
+            case 3:
+                RenderTexture.active = rtHands;
                 tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
                 break;
             default:
