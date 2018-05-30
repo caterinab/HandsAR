@@ -24,6 +24,7 @@ public class WebsocketConnection : MonoBehaviour {
 	public StateMachine stateMachine;
     public int maxBufferSize = 10;
     private bool isConnected;
+    public string jsonFrameString;
 
     //Oggetti necessari per la cattura di frame
     private WebSocket ws;
@@ -126,7 +127,8 @@ public class WebsocketConnection : MonoBehaviour {
 	}
 
     private void HandleJsonFrameData(string jsonFrame)
-    {        
+    {
+        jsonFrameString = jsonFrame;
         // conversion on message avoids slowing down leapserviceprovidernew on update
         Frame frame = converter.ConvertFromString(jsonFrame);
 

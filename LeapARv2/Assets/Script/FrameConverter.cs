@@ -13,9 +13,7 @@ using Leap;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-
-
-
+using UnityEngine;
 
 public class FrameConverter
 {
@@ -314,13 +312,14 @@ public class FrameConverter
                         rHand.StabilizedPalmPosition = new Leap.Vector(stabilizedPalmPosition[0], stabilizedPalmPosition[1], stabilizedPalmPosition[2]);
                         rHand.PalmVelocity = new Leap.Vector(palmVelocity[0], palmVelocity[1], palmVelocity[2]);
                         rHand.PalmNormal = palmNormalVector;
+                        
                         rHand.Direction = directionVector;
                         rHand.WristPosition = new Leap.Vector(wrist[0], wrist[1], wrist[2]);
 
                         //Calcoliamo rotation (LeapQuaternion)
                         Vector x = directionVector.Cross(palmNormalVector) * -1;
                         rHand.Rotation = QuaternionHelper.generateQuaternion(x, palmNormalVector * -1, directionVector * -1);
-
+                        
                         if (armBasis.Length > 0)
                         {
                             //arm

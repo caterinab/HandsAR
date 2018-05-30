@@ -2,10 +2,8 @@ using UnityEngine;
 using Leap;
 
 public class GUIUtilities : MonoBehaviour {
-
-    public WebsocketConnection frameProvider;
-    public int counter;
-    public string fps;
+    int counter;
+    string fps;
 
     [Header("On screen data")]
 

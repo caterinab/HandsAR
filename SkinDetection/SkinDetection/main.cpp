@@ -7,7 +7,31 @@ using std::cout;
 using std::cin;
 using std::vector;
 
-extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes) {
+String type2str(int type) {
+	String r;
+
+	uchar depth = type & CV_MAT_DEPTH_MASK;
+	uchar chans = 1 + (type >> CV_CN_SHIFT);
+
+	switch (depth) {
+	case CV_8U:  r = "8U"; break;
+	case CV_8S:  r = "8S"; break;
+	case CV_16U: r = "16U"; break;
+	case CV_16S: r = "16S"; break;
+	case CV_32S: r = "32S"; break;
+	case CV_32F: r = "32F"; break;
+	case CV_64F: r = "64F"; break;
+	default:     r = "User"; break;
+	}
+
+	r += "C";
+	r += (chans + '0');
+
+	return r;
+}
+
+extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes, uchar** output) {
+	clock_t begin;
 	Mat3b skin, skinHSV;
 	Mat1b output_frame;
 	int h_xs = h / 2;
@@ -23,7 +47,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	//GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
 	// generate binary mask
-	Scalar hsv_l(0, 30, 60);
+	Scalar hsv_l(0, 40, 60);
 	Scalar hsv_h(20, 150, 255);
 	inRange(skinHSV, hsv_l, hsv_h, output_frame);
 
@@ -42,6 +66,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	threshold(depthChannels[0], depthChannels[0], 0, 255, THRESH_BINARY_INV);	// depthChannels[0] = binary mask of handsMt
 	morphologyEx(depthChannels[0], depthChannels[0], CV_MOP_DILATE, Mat1b(21, 21, 1), Point(-1, -1), 1);
 
+	begin = clock();
 	double* dt = new double[h_xs * w_xs];
 	int* path = new int[h_xs * 2 * w_xs];
 
@@ -67,6 +92,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	}
 	}
 	*/
+
 	DistanceTransform2D_NormL2Ret(doubleMt.ptr<double>(0), h_xs, w_xs, dt, path);
 
 	Mat outputDepth = Mat(h_xs, w_xs, CV_8UC1, cvScalar(0));
@@ -120,6 +146,9 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 		}
 	}
 
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	cout << elapsed_secs << "\n";
 	Mat cubesMt = Mat(h, w, CV_8UC3, *cubes);
 	resize(cubesMt, cubesMt, Size(), 0.5, 0.5, INTER_LINEAR);
 	Mat cubesChannels[3];
@@ -143,16 +172,15 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 			}
 		}
 	}
-	
+
 	// dilate output to remove holes and spikes + AND to recover precise border
 	//morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
 	GaussianBlur(visibleOutput, visibleOutput, Size(13, 13), 0);
 	//medianBlur(visibleOutput, visibleOutput, 7);
 	threshold(visibleOutput, visibleOutput, 0, 255, THRESH_BINARY);
 	morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, Mat1b(11, 11, 1), Point(-1, -1), 1);
-	//morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, (13, 13), Point(-1, -1), 1);
 	bitwise_and(visibleOutput, output_frame, visibleOutput);
-	
+
 	/*
 	// convert to 3 channel image
 	Mat outputBin;
@@ -167,14 +195,28 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 
 	resize(skin, skin, Size(), 2, 2, INTER_NEAREST);
 	/*
-	imshow("cubesBin", cubesChannels[0]);
 	imshow("hands", outputDepth);
 	imshow("cubes", cubesMt);
 	imshow("output", visibleOutput);
 	imshow("skin", skin);
-	waitKey(0);*/
-	
-	std::copy(skin.data, skin.data + h * w * 3, stdext::checked_array_iterator<uchar*>(*input_frame, h*w * 3));
+	waitKey(0);
+	*/
+
+	vector<Mat> rgb;
+	Mat alpha;
+	threshold(skin, alpha, 0, 255, THRESH_BINARY);
+	Mat single_alpha[3];
+	split(alpha, single_alpha);
+	split(skin, rgb);
+	vector<Mat> rgba;
+	rgba.push_back(rgb[0]);
+	rgba.push_back(rgb[1]);
+	rgba.push_back(rgb[2]);
+	rgba.push_back(single_alpha[0]);
+	Mat dst;
+	merge(rgba, dst);
+
+	std::copy(dst.data, dst.data + h * w * 4, stdext::checked_array_iterator<uchar*>(*output, h*w * 4));
 
 	delete[] dt;
 	delete[] path;
@@ -195,22 +237,23 @@ int main()
 	}
 	*/
 	Mat img = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands_depth.png");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\1.jpg");
 	Mat img2 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\cube_depth.png");
-	Mat hands = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\SkinDetection\\hands.jpg");
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\2.jpg");
+	Mat img3 = imread(
+		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\3.jpg");
 
-	VideoCapture c("sample.mp4");
-	Mat frame;
-	clock_t begin;
+	//VideoCapture c("sample.mp4");
+	//Mat frame;
+	//clock_t begin;
 	while (true) {
-		c >> frame;
-		begin = clock();
-		DetectSkin(hands.rows, hands.cols, &hands.data, &img.data, &img2.data);
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		cout << 1 / elapsed_secs << " fps\n";
+		//c >> frame;
+		//begin = clock();
+		Mat out = Mat(img.rows, img.cols, CV_8UC4);
+		DetectSkin(img.rows, img.cols, &img.data, &img2.data, &img3.data, &out.data);
+		//clock_t end = clock();
+		//double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		//cout << elapsed_secs << "\n";
 		/*
 		imshow("", Mat(frame.rows, frame.cols, CV_8UC3, frame.data));
 		waitKey(1);

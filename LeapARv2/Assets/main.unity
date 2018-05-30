@@ -140,9 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0195c4773d031e542b6b187652653dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frameProvider: {fileID: 50716286}
-  counter: 0
-  fps: 
   enable: 1
 --- !u!4 &9393411
 Transform:
@@ -176,9 +173,9 @@ MonoBehaviour:
   ModelPool:
   - GroupName: GraphicsHands
     _handPool: {fileID: 0}
-    LeftModel: {fileID: 280885128}
+    LeftModel: {fileID: 747940685}
     IsLeftToBeSpawned: 0
-    RightModel: {fileID: 234361673}
+    RightModel: {fileID: 1860106434}
     IsRightToBeSpawned: 0
     IsEnabled: 1
     CanDuplicate: 1
@@ -200,6 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 321771970}
   maxBufferSize: 10
+  jsonFrameString: 
   buffer: []
   websocketIP: 192.168.84.126
   recordToLog: 0
@@ -219,6 +217,29 @@ MonoBehaviour:
   _temporalWarping: {fileID: 0}
   _frameOptimization: 0
   _updateHandInPrecull: 0
+  _untransformedUpdateFrame:
+    Id: 0
+    Timestamp: 0
+    CurrentFramesPerSecond: 0
+    Hands: []
+    InteractionBox:
+      Center:
+        x: 0
+        y: 0
+        z: 0
+      Size:
+        x: 0
+        y: 0
+        z: 0
+    HeadPosition:
+      x: 0
+      y: 0
+      z: 0
+    HeadOrientation:
+      x: 0
+      y: 0
+      z: 0
+      w: 0
 --- !u!4 &50716290 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432918, guid: b9c7aaf0d314cb847a3b2a20e893f1b6, type: 2}
@@ -1167,12 +1188,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2276723046d707c4f94d431ceb80ab92, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &234361673 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114245269363414434, guid: 2276723046d707c4f94d431ceb80ab92,
-    type: 2}
-  m_PrefabInternal: {fileID: 234361672}
-  m_Script: {fileID: 11500000, guid: 9e0ed5922e911b343b8400997c95409c, type: 3}
 --- !u!137 &234361674 stripped
 SkinnedMeshRenderer:
   m_PrefabParentObject: {fileID: 137723638835135990, guid: 2276723046d707c4f94d431ceb80ab92,
@@ -2225,12 +2240,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2aa010a1e75292e49a24f3f71bb9cddb, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &280885128 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114994683550464134, guid: 2aa010a1e75292e49a24f3f71bb9cddb,
-    type: 2}
-  m_PrefabInternal: {fileID: 280885127}
-  m_Script: {fileID: 11500000, guid: 9e0ed5922e911b343b8400997c95409c, type: 3}
 --- !u!137 &280885129 stripped
 SkinnedMeshRenderer:
   m_PrefabParentObject: {fileID: 137091762490896592, guid: 2aa010a1e75292e49a24f3f71bb9cddb,
@@ -4507,7 +4516,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100010, guid: 4025b4b264212954493de3ddffdaa6c0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9500000, guid: 4025b4b264212954493de3ddffdaa6c0, type: 3}
@@ -4615,7 +4624,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4817728820292730, guid: 002cd809ce7f5304186f8c9ac15e3ebf, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114012799540083930, guid: 002cd809ce7f5304186f8c9ac15e3ebf,
         type: 2}
@@ -4633,6 +4642,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 002cd809ce7f5304186f8c9ac15e3ebf, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &747940685 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114012799540083930, guid: 002cd809ce7f5304186f8c9ac15e3ebf,
+    type: 2}
+  m_PrefabInternal: {fileID: 747940684}
+  m_Script: {fileID: 11500000, guid: 1c60bd3f5e3fc2c4e91a16d36e74b49e, type: 3}
 --- !u!1001 &800328956
 Prefab:
   m_ObjectHideFlags: 0
@@ -4718,7 +4733,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100018, guid: 6ff0416441e8b5c4a9ae2586ed3ab286, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6ff0416441e8b5c4a9ae2586ed3ab286, type: 3}
@@ -5038,6 +5053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 923f070775ed40749aecef09e971b495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pixels: 
   rtHands: {fileID: 8400000, guid: 720d7237d19cba1409327308a6ece74e, type: 2}
   rtCubes: {fileID: 8400000, guid: 48550cc1f6d67f64c9be272f9ede2b8c, type: 2}
 --- !u!4 &876533443
@@ -5662,8 +5678,8 @@ Transform:
   - {fileID: 1472113707}
   - {fileID: 380216297}
   - {fileID: 1663462673}
-  - {fileID: 1561511139}
   - {fileID: 67353354}
+  - {fileID: 1561511139}
   m_Father: {fileID: 366476771}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -50, y: 0, z: 0}
@@ -7426,6 +7442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 674961169}
+  rtCubes: {fileID: 0}
 --- !u!4 &1851984397
 Transform:
   m_ObjectHideFlags: 0
@@ -7476,7 +7493,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4157141080795496, guid: 412a4cb83eefb6f42bf2d9f9a8a24d4c, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114538967924929054, guid: 412a4cb83eefb6f42bf2d9f9a8a24d4c,
         type: 2}
@@ -7494,6 +7511,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 412a4cb83eefb6f42bf2d9f9a8a24d4c, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1860106434 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114538967924929054, guid: 412a4cb83eefb6f42bf2d9f9a8a24d4c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1860106433}
+  m_Script: {fileID: 11500000, guid: 1c60bd3f5e3fc2c4e91a16d36e74b49e, type: 3}
 --- !u!1 &1901886652
 GameObject:
   m_ObjectHideFlags: 0

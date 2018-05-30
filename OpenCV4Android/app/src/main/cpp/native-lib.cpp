@@ -185,7 +185,7 @@ bool DistanceTransform2D_NormL2_GetClosest(int r, int c, int *path, int rows, in
         return false;
 }
 
-extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes) {
+extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uchar** cubes, uchar** output) {
     Mat3b skin, skinHSV;
     Mat1b output_frame;
     int h_xs = h / 2;
@@ -201,8 +201,8 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
     //GaussianBlur(frame, frame, Size(7, 7), 1, 1);
 
     // generate binary mask
-    Scalar hsv_l(0, 30, 60);
-    Scalar hsv_h(20, 150, 255);
+	Scalar hsv_l(0, 40, 60);
+	Scalar hsv_h(20, 150, 255);
     inRange(skinHSV, hsv_l, hsv_h, output_frame);
 
     //morphologyEx(output_frame, output_frame, CV_MOP_ERODE, Mat1b(3, 3, 1), Point(-1, -1), 3);	// erosion
@@ -321,13 +321,16 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
             }
         }
     }
+
     // dilate output to remove holes and spikes + AND to recover precise border
     //morphologyEx(visibleOutput, visibleOutput, CV_MOP_DILATE, Mat1b(3, 3, 1), Point(-1, -1), 1);
     GaussianBlur(visibleOutput, visibleOutput, Size(13, 13), 0);
     //medianBlur(visibleOutput, visibleOutput, 7);
     threshold(visibleOutput, visibleOutput, 0, 255, THRESH_BINARY);
     morphologyEx(visibleOutput, visibleOutput, CV_MOP_ERODE, Mat1b(11, 11, 1), Point(-1, -1), 1);
-    bitwise_and(visibleOutput, output_frame, visibleOutput);    /*
+    bitwise_and(visibleOutput, output_frame, visibleOutput);
+
+    /*
     // convert to 3 channel image
     Mat outputBin;
     Mat in[] = { visibleOutput, visibleOutput, visibleOutput };
@@ -347,7 +350,22 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
     imshow("skin", skin);
     waitKey(0);
     */
-    std::copy(skin.data, skin.data + h * w * 3, *input_frame);
+
+    vector<Mat> rgb;
+    Mat alpha;
+    threshold(skin, alpha, 0, 255, THRESH_BINARY);
+    Mat single_alpha[3];
+    split(alpha, single_alpha);
+    split(skin, rgb);
+    vector<Mat> rgba;
+    rgba.push_back(rgb[0]);
+    rgba.push_back(rgb[1]);
+    rgba.push_back(rgb[2]);
+    rgba.push_back(single_alpha[0]);
+    Mat dst;
+    merge(rgba, dst);
+
+    std::copy(dst.data, dst.data + h * w * 4, *output);
 
     delete[] dt;
     delete[] path;
