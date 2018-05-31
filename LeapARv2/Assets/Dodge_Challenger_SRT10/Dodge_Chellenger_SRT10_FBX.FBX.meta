@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 4025b4b264212954493de3ddffdaa6c0
-timeCreated: 1524225357
-licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -97,6 +95,7 @@ ModelImporter:
     4300022: headlights
     4300024: rearlights
     9500000: //RootNode
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -116,6 +115,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5

@@ -215,7 +215,7 @@ extern "C" void DetectSkin(int h, int w, uchar** input_frame, uchar** hands, uch
 	rgba.push_back(single_alpha[0]);
 	Mat dst;
 	merge(rgba, dst);
-
+	imshow("", visibleOutput); waitKey(0),
 	std::copy(dst.data, dst.data + h * w * 4, stdext::checked_array_iterator<uchar*>(*output, h*w * 4));
 
 	delete[] dt;
@@ -237,11 +237,11 @@ int main()
 	}
 	*/
 	Mat img = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\1.jpg");
+		"C:\\Users\\Caterina\\Documents\\GitKraken\\HandsAR\\SkinDetection\\1.jpg");
 	Mat img2 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\2.jpg");
+		"C:\\Users\\Caterina\\Documents\\GitKraken\\HandsAR\\SkinDetection\\2.jpg");
 	Mat img3 = imread(
-		"C:\\Users\\cbattisti\\Documents\\HandsAR\\SkinDetection\\3.jpg");
+		"C:\\Users\\Caterina\\Documents\\GitKraken\\HandsAR\\SkinDetection\\3.jpg");
 
 	//VideoCapture c("sample.mp4");
 	//Mat frame;

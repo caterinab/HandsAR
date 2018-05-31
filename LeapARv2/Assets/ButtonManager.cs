@@ -11,7 +11,6 @@ public class ButtonManager : MonoBehaviour {
     private float delta3 = 0.001f;
     private float delta4 = 0.01f;
     bool isActive = false;
-    public GameObject canvas;
     private int screenshotCount = 0;
     private int photoCount = 0;
     public RenderTexture rtCubes, rtHands;
@@ -42,6 +41,11 @@ public class ButtonManager : MonoBehaviour {
         Debug.Log("CamY: " + camY);
 
         GameObject.Find("CanvasButtons").SetActive(isActive);
+    }
+
+    public void ShowHide()
+    {
+        GameObject.Find("Canvas").GetComponent<Renderer>().enabled = !GameObject.Find("Canvas").GetComponent<Renderer>().enabled;
     }
 
     public void PlaneXPlus()
@@ -173,13 +177,7 @@ public class ButtonManager : MonoBehaviour {
             return m_Activity;
         }
     }
-
-    public void ShowHide()
-    {
-        isActive = !isActive;
-        canvas.SetActive(isActive);
-    }
-
+    
     public void CamUp()
     {
         Vector3 p = GameObject.Find("Camera").transform.localPosition;
