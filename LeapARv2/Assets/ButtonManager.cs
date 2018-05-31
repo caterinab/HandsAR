@@ -11,6 +11,7 @@ public class ButtonManager : MonoBehaviour {
     private float delta3 = 0.001f;
     private float delta4 = 0.01f;
     bool isActive = false;
+    GameObject canvas;
     private int screenshotCount = 0;
     private int photoCount = 0;
     public RenderTexture rtCubes, rtHands;
@@ -20,13 +21,16 @@ public class ButtonManager : MonoBehaviour {
 
     private void Start()
     {
+        canvas = GameObject.Find("Canvas");
+        canvas.SetActive(false);
+
         //impostazioni in base alle preferenze precedenti
         float x = PlayerPrefs.GetFloat("sensorX", 0);
         float y = PlayerPrefs.GetFloat("sensorY", 0);
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
         GameObject.Find("LeapHandController").transform.localPosition = new Vector3(x, y, z);
         Debug.Log("Sensor: " + x + " " + y + " " + z);
-
+        
         if (GameObject.Find("QuadHand") != null)
         {
             float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
@@ -34,7 +38,7 @@ public class ButtonManager : MonoBehaviour {
             GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
             Debug.Log("Hand texture: " + quadHandX + " " + quadHandY);
         }
-
+        
         float camY = PlayerPrefs.GetFloat("camY", 0);
         GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
         GameObject.Find("CameraObj").transform.localPosition = new Vector3(0, camY, 0);
@@ -45,7 +49,8 @@ public class ButtonManager : MonoBehaviour {
 
     public void ShowHide()
     {
-        GameObject.Find("Canvas").GetComponent<Renderer>().enabled = !GameObject.Find("Canvas").GetComponent<Renderer>().enabled;
+        bool enabled = canvas.activeSelf;
+        canvas.SetActive(!enabled); 
     }
 
     public void PlaneXPlus()
