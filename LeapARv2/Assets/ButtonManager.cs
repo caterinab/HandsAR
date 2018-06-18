@@ -8,9 +8,8 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour {
     private float delta = 0.005f;
     private float delta2 = 1f;
-    private float delta3 = 0.001f;
+    private float delta3 = 0.0005f;
     private float delta4 = 0.01f;
-    bool isActive = false;
     GameObject canvas;
     private int screenshotCount = 0;
     private int photoCount = 0;
@@ -21,9 +20,6 @@ public class ButtonManager : MonoBehaviour {
 
     private void Start()
     {
-        canvas = GameObject.Find("Canvas");
-        canvas.SetActive(false);
-
         //impostazioni in base alle preferenze precedenti
         float x = PlayerPrefs.GetFloat("sensorX", 0);
         float y = PlayerPrefs.GetFloat("sensorY", 0);
@@ -33,18 +29,19 @@ public class ButtonManager : MonoBehaviour {
         
         if (GameObject.Find("QuadHand") != null)
         {
+            canvas = GameObject.Find("Canvas");
+            canvas.SetActive(false);
+
             float quadHandX = PlayerPrefs.GetFloat("quadHandX", 0);
             float quadHandY = PlayerPrefs.GetFloat("quadHandY", 0);
             GameObject.Find("QuadHand").transform.localPosition = new Vector3(quadHandX, quadHandY, 0);
             Debug.Log("Hand texture: " + quadHandX + " " + quadHandY);
-        }
-        
-        float camY = PlayerPrefs.GetFloat("camY", 0);
-        GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
-        GameObject.Find("CameraObj").transform.localPosition = new Vector3(0, camY, 0);
-        Debug.Log("CamY: " + camY);
 
-        GameObject.Find("CanvasButtons").SetActive(isActive);
+            float camY = PlayerPrefs.GetFloat("camY", 0);
+            GameObject.Find("Camera").transform.localPosition = new Vector3(0, camY, 0);
+            GameObject.Find("CameraObj").transform.localPosition = new Vector3(0, camY, 0);
+            Debug.Log("CamY: " + camY);
+        }
     }
 
     public void ShowHide()
@@ -52,7 +49,7 @@ public class ButtonManager : MonoBehaviour {
         bool enabled = canvas.activeSelf;
         canvas.SetActive(!enabled); 
     }
-
+    /*
     public void PlaneXPlus()
     {
         Vector3 p = GameObject.Find("Plane").transform.localPosition;
@@ -93,7 +90,7 @@ public class ButtonManager : MonoBehaviour {
     {
         GameObject.Find("Plane").transform.Rotate(0, -5, 0, Space.World);
     }
-
+    */
     public void CaptureSingleScreenshot()
     {
         //StartCoroutine(Waiter());
@@ -111,6 +108,7 @@ public class ButtonManager : MonoBehaviour {
 
         //Debug.Log(GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().jsonFrameString);   // gets cut at 1KB
 
+        StartCoroutine(CaptureScreenshotCoroutine(Screen.width, Screen.height, 0));
         StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 1));
         StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 2));
         StartCoroutine(CaptureScreenshotCoroutine(1280, 720, 3));

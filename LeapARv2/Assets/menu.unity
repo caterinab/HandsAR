@@ -4022,7 +4022,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9523a189f2c149944a136fd2cc8a1c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
   rtCubes: {fileID: 0}
   rtHands: {fileID: 0}
 --- !u!4 &1489131150
@@ -4709,7 +4708,7 @@ MonoBehaviour:
   m_Script: {fileID: -1826476478, guid: 1e108ae5f2133934f948edded555f03e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mWorldCenterMode: 3
+  mWorldCenterMode: 2
   mWorldCenter: {fileID: 0}
 --- !u!81 &1953417140
 AudioListener:
