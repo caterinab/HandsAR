@@ -333,6 +333,7 @@
     <Compile Include="Assets\Common\SplashAbout\LoadingScreen.cs" />
     <Compile Include="Assets\Common\TapHandler.cs" />
     <Compile Include="Assets\Common\TrackableSettings.cs" />
+    <Compile Include="Assets\FrameJSONConverter.cs" />
     <Compile Include="Assets\GraspDetector.cs" />
     <Compile Include="Assets\HandDepthTest.cs" />
     <Compile Include="Assets\LeapMotion\Core\Scripts\Algorithms\SlidingMax.cs" />
@@ -588,6 +589,7 @@
     <Compile Include="Assets\UIPolygon.cs" />
     <Compile Include="Assets\Vuforia\Scripts\DefaultInitializationErrorHandler.cs" />
     <Compile Include="Assets\Vuforia\Scripts\DefaultTrackableEventHandler.cs" />
+    <Compile Include="Assets\WebsocketClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ButtonShader.shader" />

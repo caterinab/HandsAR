@@ -244,7 +244,7 @@ namespace Leap.Unity
                 }
                 else
                 {
-                    return _transformedUpdateFrame;
+                    return _untransformedUpdateFrame;
                 }
             }
         }
@@ -334,7 +334,8 @@ namespace Leap.Unity
                 long timestamp = CalculateInterpolationTime() + (ExtrapolationAmount * 1000);
                 _unityToLeapOffset = timestamp - (long)(Time.time * S_TO_NS);
 
-                _leapController.GetInterpolatedFrameFromTime(_untransformedUpdateFrame, timestamp, CalculateInterpolationTime() - (BounceAmount * 1000));
+                _leap
+                .GetInterpolatedFrameFromTime(_untransformedUpdateFrame, timestamp, CalculateInterpolationTime() - (BounceAmount * 1000));
             }
             else
             {

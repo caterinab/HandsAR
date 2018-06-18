@@ -273,13 +273,13 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void StartMainScene() {
-        GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().DisconnectClient();
+        GameObject.Find("LeapHandController").GetComponent<WebsocketClient>().DisconnectClient();
         SceneManager.LoadSceneAsync("main");
     }
 
     public void StartMenuScene()
     {
-        GameObject.Find("LeapHandController").GetComponent<WebsocketConnection>().DisconnectClient();
+        GameObject.Find("LeapHandController").GetComponent<WebsocketClient>().DisconnectClient();
         SceneManager.LoadSceneAsync("menu");
     }
 

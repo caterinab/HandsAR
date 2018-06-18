@@ -259,7 +259,7 @@ namespace Leap.Unity
         {
             manualUpdateHasBeenCalledSinceUpdate = false;
             base.Update();
-            imageTimeStamp = _leapController.FrameTimestamp();
+            //imageTimeStamp = _leapController.FrameTimestamp();
         }
 
         void LateUpdate()
@@ -333,7 +333,7 @@ namespace Leap.Unity
             // This way, we always track a scene-space tracked pose.
             Pose effTransformPose = _trackingBaseDeltaPose.Value * trackedPose;
 
-            transformHistory.UpdateDelay(effTransformPose, _leapController.Now());
+            //transformHistory.UpdateDelay(effTransformPose, _leapController.Now());
 
             OnPreCullHandTransforms(_cachedCamera);
         }

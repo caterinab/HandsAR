@@ -24,7 +24,7 @@ public class ButtonManager : MonoBehaviour {
         float x = PlayerPrefs.GetFloat("sensorX", 0);
         float y = PlayerPrefs.GetFloat("sensorY", 0);
         float z = PlayerPrefs.GetFloat("sensorZ", 0);
-        GameObject.Find("LeapMotionController").transform.localPosition = new Vector3(x, y, z);
+        //GameObject.Find("LeapMotionController").transform.localPosition = new Vector3(x, y, z);
         Debug.Log("Sensor: " + x + " " + y + " " + z);
         
         if (GameObject.Find("QuadHand") != null)
@@ -43,7 +43,7 @@ public class ButtonManager : MonoBehaviour {
             Debug.Log("CamY: " + camY);
         }
     }
-
+    
     public void ShowHide()
     {
         bool enabled = canvas.activeSelf;
@@ -273,13 +273,13 @@ public class ButtonManager : MonoBehaviour {
     }
 
     public void StartMainScene() {
-        GameObject.Find("LeapMotionController").GetComponent<WebsocketClient>().DisconnectClient();
+        GameObject.Find("ARCamera").GetComponent<WebsocketClient>().DisconnectClient();
         SceneManager.LoadSceneAsync("main");
     }
 
     public void StartMenuScene()
     {
-        GameObject.Find("LeapMotionController").GetComponent<WebsocketClient>().DisconnectClient();
+        GameObject.Find("ARCamera").GetComponent<WebsocketClient>().DisconnectClient();
         SceneManager.LoadSceneAsync("menu");
     }
 

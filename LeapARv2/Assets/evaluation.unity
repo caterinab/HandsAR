@@ -281,7 +281,7 @@ Transform:
   - {fileID: 883537161}
   - {fileID: 158063191}
   m_Father: {fileID: 206516026}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8847180
 MeshFilter:
@@ -1485,8 +1485,8 @@ Transform:
   - {fileID: 1611981196}
   - {fileID: 871453128}
   - {fileID: 392047198}
-  - {fileID: 865479912}
   - {fileID: 8847179}
+  - {fileID: 865479912}
   - {fileID: 777727194}
   - {fileID: 1968746413}
   - {fileID: 1779913675}
@@ -2717,7 +2717,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 264468592}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f10fa40360571247a7ca806d6859557, type: 3}
   m_Name: 
@@ -3240,7 +3240,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 383449126}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f20d12a55df07d44a54a1a68450d692, type: 3}
   m_Name: 
@@ -3881,7 +3881,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 458870470}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f20d12a55df07d44a54a1a68450d692, type: 3}
   m_Name: 
@@ -5492,7 +5492,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 432918, guid: b9c7aaf0d314cb847a3b2a20e893f1b6, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11406336, guid: b9c7aaf0d314cb847a3b2a20e893f1b6, type: 2}
       propertyPath: LeftGraphicsModel
@@ -5615,6 +5615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editTimePose: 0
+  client: {fileID: 865479915}
   _isHeadMounted: 0
   _temporalWarping: {fileID: 0}
   _frameOptimization: 0
@@ -5627,15 +5628,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 865479913}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07b86fd81a567a946b68b73957508d38, type: 3}
+  m_Script: {fileID: 11500000, guid: 4019afe453ea39a40adeee4ed5108a83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 1928829695}
   maxBufferSize: 10
-  jsonFrameString: 
-  buffer: []
   websocketIP: 192.168.85.215
-  recordToLog: 0
 --- !u!114 &865479916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5679,7 +5677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &871453126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5721,8 +5719,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionManager: {fileID: 871453126}
-  leftHandControllers: []
-  rightHandControllers: []
+  leftHandControllers:
+  - {fileID: 2047435749}
+  rightHandControllers:
+  - {fileID: 302490713}
   OnLeftHandActive:
     m_PersistentCalls:
       m_Calls:

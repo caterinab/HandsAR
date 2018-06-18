@@ -1790,15 +1790,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 383465930}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07b86fd81a567a946b68b73957508d38, type: 3}
+  m_Script: {fileID: 11500000, guid: 4019afe453ea39a40adeee4ed5108a83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 509017213}
-  maxBufferSize: 100
-  jsonFrameString: 
-  buffer: []
+  maxBufferSize: 10
   websocketIP: 192.168.85.215
-  recordToLog: 0
 --- !u!114 &383465932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1811,6 +1808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editTimePose: 0
+  client: {fileID: 383465931}
   _isHeadMounted: 1
   _temporalWarping: {fileID: 0}
   _frameOptimization: 0

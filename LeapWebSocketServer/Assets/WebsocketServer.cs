@@ -42,7 +42,6 @@ public class WebsocketServer : MonoBehaviour
 {
     static WebSocketServer wssv;
     static int contatore = 0;
-    public FrameJSONConverter converter;
 
     public void Start()
     {
@@ -62,7 +61,7 @@ public class WebsocketServer : MonoBehaviour
         {
             if (wssv.IsListening)
             {
-                string s = converter.FrameToJSON(data);
+                string s = FrameJSONConverter.FrameToJSON(data);
                 wssv.WebSocketServices.Broadcast(s);
                 Debug.Log(s);
             }
